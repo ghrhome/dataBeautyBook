@@ -42,5 +42,44 @@ $('#but').on('click', function () {
 </script>
 ```
 
+PS:另外一种 animated的封装
+
+```
+/**
+ * Shortcut for adding animation class name to dom element
+ * @param  {string}   cls        class name
+ * @param  {Function} cb         callback
+ * @param  {Function}   lastItemCb  callback execute at last elment animated 
+ * @return {object}              this
+ */
+$.fn.classAnimoEnd = function(cls, cb, lastItemCb) {
+  var el = this;
+
+  cb && (cb = $.proxy(cb, el));
+
+  var count = $(el).length;
+
+  $(el)
+    .removeClass('animated ' + cls)
+    .one($.support.animate.end, function () {
+        cb && cb();
+        $(el).removeClass('animated');
+
+        if(count > 1) {
+          count --;
+
+          if(count === 0)
+            lastItemCb && lastItemCb();
+        }
+      })
+    .addClass('animated ' + cls);
+
+  if(!$(el).css('display') !== 'none' )
+    $(el).show();
+
+  return this;
+}
+```
+
 
 
