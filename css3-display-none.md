@@ -6,3 +6,41 @@
 
 隐藏时先添加 上动画，在transitionend回调里添加上none类
 
+```
+<style>
+.box{
+   background: goldenrod;
+   width: 200px;
+   height: 200px;
+   transition: all .4s linear;
+   visibility: visible;
+   position:absolute;right:0px;top:0px;
+}
+.hidden{
+   display: none;
+}
+.visuallyhidden{
+   opacity: 0;
+}
+</style>
+<div class="box hidden visuallyhidden"></div>
+<script>
+var box = $('.box');
+$('#but').on('click', function () {
+   if (box.hasClass('hidden')) {
+       box.removeClass('hidden');
+       requestAnimationFrame(function(){
+           box.removeClass('visuallyhidden');
+       });
+   } else {
+       box.addClass('visuallyhidden');
+       box.one('transitionend', function(e) {
+           box.addClass('hidden');
+       });
+   }
+});
+</script>
+```
+
+
+
