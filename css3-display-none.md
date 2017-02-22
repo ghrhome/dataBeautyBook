@@ -42,6 +42,34 @@ $('#but').on('click', function () {
 </script>
 ```
 
+参考Animate.css动画库Demo里的封装：
+
+```
+<script>
+
+  function testAnim(x) {
+    $('#animationSandbox').removeClass().addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+      $(this).removeClass();
+    });
+  };
+
+  $(document).ready(function(){
+    $('.js--triggerAnimation').click(function(e){
+      e.preventDefault();
+      var anim = $('.js--animations').val();
+      testAnim(anim);
+    });
+
+    $('.js--animations').change(function(){
+      var anim = $(this).val();
+      testAnim(anim);
+    });
+  });
+
+
+</script>
+```
+
 PS:另外一种 animated的封装
 
 ```
