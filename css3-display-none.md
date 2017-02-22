@@ -81,5 +81,18 @@ $.fn.classAnimoEnd = function(cls, cb, lastItemCb) {
 }
 ```
 
+其他思路：
+
+```
+隐藏一个元素的方法有很多种
+
+display: none
+visibility: hidden
+opacity: 0
+max-height: 0, overflow: hidden
+
+这些方法中，有的是隐藏后不占据空间，有的要占据，有的是离散状态（没有transition）,有的可以有transition。
+```
+
 
 
