@@ -6,7 +6,6 @@
 
 3、通过key/value键值对绑定
 
-  
 实现方法：
 
 1、通过$scope绑定（不推荐）：
@@ -36,4 +35,6 @@ function ctrl($scope) {
 当isSelected为true时，增加selected样式；当isSelected为false时，增加unselected样式。
 
 3、通过key/value键值对绑定：
+
+
 
