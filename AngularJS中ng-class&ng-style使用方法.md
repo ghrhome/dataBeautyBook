@@ -1,4 +1,4 @@
-有三种方法：
+[AngularJS中ng-class&ng-style使用方法.md](AngularJS中ng-class&ng-style使用方法.md)有三种方法：
 
 1、通过$scope绑定（不推荐）
 
@@ -62,9 +62,44 @@ function ctrl($scope) {
 
 几点说明：
 
-1、不推荐第一种方法，因为controller $scope应该只有数据和行为
+1、不推荐第一种方法，因为controller $scope应该只有数据和行为
 
 2、ng-class是增加相关样式，可以和class同时使用
+
+
+
+# AngularJS`ng-style`指令
+
+使用AngularJS添加样式，使用 CSS key=&gt;value 对象格式:
+
+## 定义和用法
+
+**ng-style**指令为 HTML 元素添加 style 属性。
+
+**ng-style**属性值必须是对象，表达式返回的也是对象。
+
+对象由 CSS 属性和值注册，即 key=&gt;value 对。
+
+> &lt;_element _ng-style="_expression_"&gt;&lt;/_element_&gt;
+
+```
+<body ng-app="myApp" ng-controller="myCtrl">
+
+<h1 ng-style="myObj">菜鸟教程</h1>
+
+<script>
+var app = angular.module("myApp", []);
+app.controller("myCtrl", function($scope) {
+    $scope.myObj = {
+        "color" : "white",
+        "background-color" : "coral",
+        "font-size" : "60px",
+        "padding" : "50px"
+    }
+});
+</script>
+</body>
+```
 
 
 
