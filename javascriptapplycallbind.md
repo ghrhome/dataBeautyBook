@@ -92,7 +92,6 @@ function log(){
 
   console.log.apply(console, args);
 };
-
 ```
 
 ## bind 用法简单示例
@@ -134,6 +133,24 @@ var bar = function(){
 bar(); // undefined
 var func = bar.bind(foo);
 func(); // 3
+```
+
+## apply、call、bind 比较
+
+```
+var obj = {
+    x: 81,
+};
+
+var foo = {
+    getX: function() {
+        return this.x;
+    }
+}
+
+console.log(foo.getX.bind(obj)());      //81
+console.log(foo.getX.call(obj));        //81
+console.log(foo.getX.apply(obj));       //81
 ```
 
 
