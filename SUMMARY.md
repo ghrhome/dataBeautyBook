@@ -7,4 +7,5 @@
 * [React动画的几种实现方式](React动画的几种实现方式.md)
 * [AngularJS中ng-class使用方法](AngularJS中ng-class&ng-style使用方法.md)
 * [妙用Javascript中apply、call、bind](javascriptapplycallbind.md)
+* [FLUX架构入门](flux.md)
 
