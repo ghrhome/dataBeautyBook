@@ -71,13 +71,29 @@ var ListStore = {
     items: []
 
 };
-
 ```
 
-Your store then**responds to the dispatched action:**
+Your store then **responds to the dispatched action:**
 
 ```
-<button onClick={ this.createNewItem }>New Item</button> 
+var ListStore = …
+
+// Tell the dispatcher we want to listen for *any*
+// dispatched events
+AppDispatcher.register( function( payload ) {
+
+    switch( payload.actionName ) {
+
+        // Do we know how to handle this action?
+        case 'new-item':
+
+            // We get to mutate data!
+            ListStore.items.push( payload.newItem );
+            break;
+
+    }
+
+}); 
 ```
 
 This is traditionally how Flux handles dispatch callbacks. Each payload contains an action name and data. A switch statement determines if the store should respond to the action, and mutates data if it knows how to handle that action type.
@@ -97,72 +113,24 @@ We're almost there! Now that your data is definitely changed, we need to tell th
 Your store emits an**event**, but**not using the dispatcher.**This is confusing, but it's the Flux way. Let's give our store the ability to trigger events. If you're using[MicroEvent.js](http://notes.jetienne.com/2011/03/22/microeventjs.html)this is easy:
 
 ```
-
+MicroEvent.mixin( ListStore );  
 ```
 
 Then let's trigger our change event:
 
 ```
+case 'new-item':
+
+            ListStore.items.push( payload.newItem );
+
+            // Tell the world we changed!
+            ListStore.trigger( 'change' );
+
+            break;
 
 ```
 
-![](http://blog.andrewray.me/content/images/2014/Oct/key.png#inline-block)Key Concept: We don't pass the newest item when we`trigger`. Our views only care that\_something\_changed. Let's keep following the data to understand why.
-
-## 4. Your View Responds to the "Change" Event {#4yourviewrespondstothechangeevent}
-
-Now we need to display the list. Our view will**completely re-render**when the list changes. That's not a typo.
-
-First, let's listen for the`change`event from our ListStore when the component "mounts," which is when the component is first created:
-
-```
-
-```
-
-For simplicity's sake, we'll just call`forceUpdate`, which triggers a re-render.
-
-```
-
-```
-
-Don't forget to clean up your event listeners when your component "unmounts," which is when it goes back to hell:
-
-```
-
-```
-
-Now what? Let's look at our render function, which I've purposely saved for last.
-
-```
-
-```
-
-**We've come full circle.**When you add a new item, the view_dispatches\_an\_action_, the store responds to that action, the store mutates data, the store\_triggers\_a change event, and the view responds to the change event by re-rendering.
-
-But here's a problem: we're**re-rendering the entire view**every time the list changes! Isn't that horribly inefficient?
-
-Nope.
-
-Sure, we'll call the render function again, and sure, all the code in the render function will be re-run. But**React will only update the real DOM if your rendered output has changed.**Your`render`function is actually generating a "virtual DOM", which React compares to the previous output of`render`. If the two virtual DOMs are different, React will update the real DOM with only the difference.
-
-![](http://blog.andrewray.me/content/images/2014/Oct/key.png#inline-block)Key Concept: When store data changes,**your views shouldn't care if things were added, deleted, or modified.**They should just re-render entirely. React's "virtual DOM" diff algorithm handles the heavy lifting of figuring out which real DOM nodes changed. This makes your life much simpler, and will lower your blood pressure.
-
-## One More Thing: What The Hell Is An "Action Creator"? {#onemorethingwhatthehellisanactioncreator}
-
-Remember, when we click our button, we dispatch a specific action:
-
-```
-
-```
-
-Well, this can get pretty repetitious to type if many of your views need to dispatch this action. Plus, all of your views need to know the specific object format. That's lame. Flux suggests an abstraction, called**action creators,**which just abstracts the above into a function.
-
-```
-
-```
-
-Now your view can just call`ListActions.add({ name: '...' });`and not have to worry about dispatched object syntax.
-
-## Unanswered Questions {#unansweredquestions}
+![](http://blog.andrewray.me/content/images/2014/Oct/key.png#inline-block)Key Concept: We don't pass the newest item when we`trigger`. Our views only care that _something _changed. Let's keep following the data to understand why.
 
 All Flux tells us how to do is manage data flow. It**doesn't answer**these questions:
 
