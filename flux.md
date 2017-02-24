@@ -185,3 +185,138 @@ AppDispatcher.register(function (action) {
 
 记住，Dispatcher 只用来派发 Action，不应该有其他逻辑。
 
+## 七、Store
+
+Store 保存整个应用的状态。它的角色有点像 MVC 架构之中的Model 。
+
+在我们的 Demo 中，有一个[`ListStore`](https://github.com/ruanyf/extremely-simple-flux-demo/blob/master/stores/ListStore.js)，所有数据都存放在那里。
+
+```
+// stores/ListStore.js
+var ListStore = {
+  items: [],
+
+  getAll: function() {
+    return this.items;
+  },
+
+  addNewItemHandler: function (text) {
+    this.items.push(text);
+  },
+
+  emitChange: function () {
+    this.emit('change');
+  }
+};
+
+module.exports = ListStore;
+```
+
+上面代码中，`ListStore.items`用来保存条目，`ListStore.getAll()`用来读取所有条目，`ListStore.emitChange()`用来发出一个"change"事件。
+
+由于 Store 需要在变动后向 View 发送"change"事件，因此它必须实现事件接口。
+
+```
+// stores/ListStore.js
+var EventEmitter = require('events').EventEmitter;
+var assign = require('object-assign');
+
+var ListStore = assign({}, EventEmitter.prototype, {
+  items: [],
+
+  getAll: function () {
+    return this.items;
+  },
+
+  addNewItemHandler: function (text) {
+    this.items.push(text);
+  },
+
+  emitChange: function () {
+    this.emit('change');
+  },
+
+  addChangeListener: function(callback) {
+    this.on('change', callback);
+  },
+
+  removeChangeListener: function(callback) {
+    this.removeListener('change', callback);
+  }
+});
+```
+
+上面代码中，`ListStore`继承了`EventEmitter.prototype`，因此就能使用`ListStore.on()`和`ListStore.emit()`，来监听和触发事件了。
+
+Store 更新后（`this.addNewItemHandler()`）发出事件（`this.emitChange()`），表明状态已经改变。 View 监听到这个事件，就可以查询新的状态，更新页面了。
+
+## 八、View （第二部分）
+
+现在，我们再回过头来修改[View](https://github.com/ruanyf/extremely-simple-flux-demo/blob/master/components/MyButtonController.jsx)，让它监听 Store 的`change`事件。
+
+```
+// components/MyButtonController.jsx
+var React = require('react');
+var ListStore = require('../stores/ListStore');
+var ButtonActions = require('../actions/ButtonActions');
+var MyButton = require('./MyButton');
+
+var MyButtonController = React.createClass({
+  getInitialState: function () {
+    return {
+      items: ListStore.getAll()
+    };
+  },
+
+  componentDidMount: function() {
+    ListStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function() {
+    ListStore.removeChangeListener(this._onChange);
+  },
+
+  _onChange: function () {
+    this.setState({
+      items: ListStore.getAll()
+    });
+  },
+
+  createNewItem: function (event) {
+    ButtonActions.addNewItem('new item');
+  },
+
+  render: function() {
+    return <MyButton
+      items={this.state.items}
+      onClick={this.createNewItem}
+    />;
+  }
+});
+```
+
+上面代码中，你可以看到当`MyButtonController`发现 Store 发出`change`事件，就会调用`this._onChange`更新组件状态，从而触发重新渲染。
+
+```
+// components/MyButton.jsx
+var React = require('react');
+
+var MyButton = function(props) {
+  var items = props.items;
+  var itemHtml = items.map(function (listItem, i) {
+    return <li key={i}>{listItem}</li>;
+  });
+
+  return <div>
+    <ul>{itemHtml}</ul>
+    <button onClick={props.onClick}>New Item</button>
+  </div>;
+};
+
+module.exports = MyButton;
+```
+
+## 九、致谢
+
+本文受到了Andrew Ray 的文章[《Flux For Stupid People》](http://blog.andrewray.me/flux-for-stupid-people/)的启发。
+
