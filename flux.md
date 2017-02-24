@@ -151,8 +151,6 @@ var ButtonActions = {
 
 上面代码中，`ButtonActions.addNewItem`方法使用`AppDispatcher`，把动作`ADD_NEW_ITEM`派发到Store。
 
-
-
 ## 六、Dispatcher
 
 Dispatcher 的作用是将 Action 派发到 Store、。你可以把它看作一个路由器，负责在 View 和 Store 之间，建立 Action 的正确传递路线。注意，Dispatcher 只能有一个，而且是全局的。
@@ -165,7 +163,25 @@ var Dispatcher = require('flux').Dispatcher;
 module.exports = new Dispatcher();
 ```
 
-`AppDispatcher.register()`
+`AppDispatcher.register()`方法用来登记各种Action的回调函数。
 
-方法用来登记各种Action的回调函数。
+```
+// dispatcher/AppDispatcher.js
+var ListStore = require('../stores/ListStore');
+
+AppDispatcher.register(function (action) {
+  switch(action.actionType) {
+    case 'ADD_NEW_ITEM':
+      ListStore.addNewItemHandler(action.text);
+      ListStore.emitChange();
+      break;
+    default:
+      // no op
+  }
+})
+```
+
+上面代码中，Dispatcher收到`ADD_NEW_ITEM`动作，就会执行回调函数，对`ListStore`进行操作。
+
+记住，Dispatcher 只用来派发 Action，不应该有其他逻辑。
 
