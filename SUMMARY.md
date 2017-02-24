@@ -8,4 +8,5 @@
 * [AngularJS中ng-class使用方法](AngularJS中ng-class&ng-style使用方法.md)
 * [妙用Javascript中apply、call、bind](javascriptapplycallbind.md)
 * [FLUX架构入门](flux.md)
+* [Flux for stupid people](flux-for-stupid-people.md)
 
