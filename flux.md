@@ -22,7 +22,7 @@ Flux存在多种实现（[至少15种](https://github.com/voronianski/flux-compa
 > $ npm start
 > ```
 
-然后，访问 http://127.0.0.1:8080 。
+然后，访问 [http://127.0.0.1:8080](http://127.0.0.1:8080) 。
 
 ![](/assets/bg2016011502.png)
 
@@ -34,17 +34,11 @@ Flux存在多种实现（[至少15种](https://github.com/voronianski/flux-compa
 
 首先，Flux将一个应用分成四个部分。
 
+> View:视图层
 >
-
-
-
-
-
-
-
-
-
-
+> **Action**（动作）:视图层发出的消息（比如mouseClick）
+>
+> **Dispatcher**（派发器）:用来接收Actions、执行回调函数
 
 
 
