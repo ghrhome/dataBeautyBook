@@ -1,7 +1,5 @@
 PostMessage应用Demo
 
-
-
 PageA:
 
 ```
@@ -69,7 +67,7 @@ PageA:
                         console.log("e....source")
                         console.log(e.source);
                         console.log(win);
-                  
+
                         win.postMessage(message,'http://192.168.120.241:8000/');
                     }, 2000, e.source);
                     break;
@@ -86,30 +84,47 @@ PageA:
 
 </body>
 </html>
-
 ```
 
-page
+Page B
+
+```
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>测试窗体</title>
+    <link rel="stylesheet" href="http://s1.xiaomishu.com/b/css/min/base.css">
+    <style>
+        body{min-width:0;}
+    </style>
+</head>
+<body>
+<div id="message" class="p20"></div>
+<script>
+    console.log(window.opener);
+    window.addEventListener('message', function(e) {
+        document.querySelector("#message").innerHTML = "接受到的信息是：" + e.data;
+        console.log((new Date()).getTime());
+        console.log(e.data)
+    }, false);
+
+    // 当文档加载完毕, 给父级来源发送信息。
+    window.addEventListener('load', function(e){
+        console.dir(e);
+        console.log(arguments);
+        console.dir(e.currentTarget.opener);
+        e.currentTarget.opener.postMessage('ready', 'http://192.168.120.241:8000');
+    }, false);
+
+    // 当窗体关闭，告诉父级窗体已经关闭了。
+    window.addEventListener('unload', function(e){
+        e.currentTarget.opener.postMessage('closed', 'http://192.168.120.241:8000');
+    }, false);
+</script>
 
 
+</body>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 
 
