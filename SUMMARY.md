@@ -9,4 +9,5 @@
 * [妙用Javascript中apply、call、bind](javascriptapplycallbind.md)
 * [FLUX架构入门](flux.md)
 * [Flux for stupid people](flux-for-stupid-people.md)
+* [postMessage应用demo](postmessagedemo.md)
 
