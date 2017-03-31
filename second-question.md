@@ -32,5 +32,23 @@
 
 ### 2.持久使用 {#1-临时使用}
 
+```
+npm config set registry https://registry.npm.taobao.org
+
+// 配置后可通过下面方式来验证是否成功
+npm config get registry
+// 或
+npm info express
+```
+
+### 3.通过cnpm使用 {#1-临时使用}
+
+```
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+// 使用
+cnpm install express
+```
+
 
 
