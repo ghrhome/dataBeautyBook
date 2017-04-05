@@ -10,4 +10,5 @@
 * [FLUX架构入门](flux.md)
 * [Flux for stupid people](flux-for-stupid-people.md)
 * [postMessage应用demo](postmessagedemo.md)
+* [在 AngularJS 应用中处理单选框和复选框 ](zai-angularjs-ying-yong-zhong-chu-li-dan-xuan-kuang-he-fu-xuan-kuang.md)
 
