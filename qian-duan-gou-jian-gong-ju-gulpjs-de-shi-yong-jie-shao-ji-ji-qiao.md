@@ -323,7 +323,7 @@ gulp.src(script/lib/*.js) //没有配置base参数，此时默认的base路径�
 
 gulp.src(script/lib/*.js, {base:'script'}) //配置了base参数，此时base路径为script
     //假设匹配到的文件为script/lib/jquery.js
-    .pipe(gulp.dest('build')) //此时生成的文件路径为 build/lib/jquery.js    
+    .pipe(gulp.dest('build')) //此时生成的文件路径为 build/lib/jquery.js
 ```
 
 用`gulp.dest()`把文件流写入文件后，文件流仍然可以继续使用。
@@ -462,7 +462,7 @@ gulp.watch('js/**/*.js', ['uglify','reload']);
 gulp.watch('js/**/*.js', function(event){
     console.log(event.type); //变化类型 added为新增,deleted为删除，changed为改变 
     console.log(event.path); //变化的文件的路径
-}); 
+});
 ```
 
 # 4、一些常用的gulp插件 {#一些常用的gulp插件}
@@ -486,7 +486,7 @@ gulp的插件数量虽然没有grunt那么多，但也可以说是应有尽有�
     f = require('gulp-f'),
     g = require('gulp-g'),
     //更多的插件...
-    z = require('gulp-z');   
+    z = require('gulp-z');
 ```
 
 虽然这没什么问题，但会使我们的`gulpfile.js`文件变得很冗长，看上去不那么舒服。`gulp-load-plugins`插件正是用来解决这个问题。  
@@ -532,7 +532,7 @@ plugins.rubySass = require('gulp-ruby-sass');
 var gulp = require('gulp'),
     rename = require('gulp-rename'),
     uglify = require("gulp-uglify");
- 
+
 gulp.task('rename', function () {
     gulp.src('js/jquery.js')
     .(uglify())  //压缩
@@ -551,7 +551,7 @@ gulp.task('rename', function () {
 ```
  gulp = require('gulp'),
     uglify = require("gulp-uglify");
- 
+
 gulp.task('minify-js', function () {
     gulp.src('js/*.js') // 要压缩的js文件
     .pipe(uglify())  //使用uglify进行压缩,更多配置请参考：
@@ -568,7 +568,7 @@ gulp.task('minify-js', function () {
 ```
  gulp = require('gulp'),
     minifyCss = require("gulp-minify-css");
- 
+
 gulp.task('minify-css', function () {
     gulp.src('css/*.css') // 要压缩的css文件
     .pipe(minifyCss()) //压缩css
@@ -585,7 +585,7 @@ gulp.task('minify-css', function () {
 ```
  gulp = require('gulp'),
     minifyHtml = require("gulp-minify-html");
- 
+
 gulp.task('minify-html', function () {
     gulp.src('html/*.html') // 要压缩的html文件
     .pipe(minifyHtml()) 
@@ -602,7 +602,7 @@ gulp.task('minify-html', function () {
 ```
  gulp = require('gulp'),
     jshint = require("gulp-jshint");
- 
+
 gulp.task('jsLint', function () {
     gulp.src('js/*.js')
     .pipe(jshint())
@@ -619,7 +619,7 @@ gulp.task('jsLint', function () {
 ```
  gulp = require('gulp'),
     concat = require("gulp-concat");
- 
+
 gulp.task('concat', function () {
     gulp.src('js/*.js')  //要合并的文件
     .pipe(concat('all.js'))  // 合并匹配到的js文件并命名为 "all.js"
@@ -634,7 +634,7 @@ less使用[gulp-less](https://www.npmjs.com/packages/gulp-less),安装：`npm in
 ```
  gulp = require('gulp'),
     less = require("gulp-less");
- 
+
 gulp.task('compile-less', function () {
     gulp.src('less/*.less')
     .pipe(less())
@@ -647,7 +647,7 @@ sass使用[gulp-sass](https://www.npmjs.com/packages/gulp-sass),安装：`npm in
 ```
  gulp = require('gulp'),
     sass = require("gulp-sass");
- 
+
 gulp.task('compile-sass', function () {
     gulp.src('sass/*.sass')
     .pipe(sass())
@@ -700,25 +700,6 @@ gulp.task('watch', function() {
   gulp.watch('less/*.less', ['less']);
 });
 ```
-
-如对gulp还有什么不明白之处，或者本文有什么遗漏或错误，欢迎一起交流和探讨~
-
-Measure
-
-Measure
-
-
-
-
-
-
-
-
-
-
-
-  
-
 
 
 
