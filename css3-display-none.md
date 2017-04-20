@@ -122,5 +122,31 @@ max-height: 0, overflow: hidden
 这些方法中，有的是隐藏后不占据空间，有的要占据，有的是离散状态（没有transition）,有的可以有transition。
 ```
 
+补充：
+
+个人写法：
+
+```
+  var $opt=$(".section-opt");
+               // $opt.off();
+                if(swiper.activeIndex==(slideCount-1)){
+                    $opt.off();
+                    $opt.removeClass("fadeOutLeft").addClass("active animated");
+                    requestAnimationFrame(function(){
+                        $opt.addClass('fadeInRight').one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend",function(){
+                            $opt.removeClass("fadeInRight");
+                        });
+                    });
+
+                }else{
+                    if($opt.hasClass("active")){
+                        $opt.addClass('fadeOutLeft').one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend",function(){
+                            $opt.removeClass("active animated fadeOutLeft");
+
+                        });
+                    }
+                }
+```
+
 
 
