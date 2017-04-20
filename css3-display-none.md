@@ -127,6 +127,11 @@ max-height: 0, overflow: hidden
 个人写法：
 
 ```
+.inside-page .section-opt{display: none;visibility: hidden;}
+.inside-page .section-opt.active{display: block;visibility: visible;}
+```
+
+```
 var $opt=$(".section-opt");
 // $opt.off();
 if(swiper.activeIndex==(slideCount-1)){
