@@ -12,4 +12,5 @@
 * [postMessage应用demo](postmessagedemo.md)
 * [在 AngularJS 应用中处理单选框和复选框 ](zai-angularjs-ying-yong-zhong-chu-li-dan-xuan-kuang-he-fu-xuan-kuang.md)
 * [前端构建工具gulpjs的使用介绍及技巧](qian-duan-gou-jian-gong-ju-gulpjs-de-shi-yong-jie-shao-ji-ji-qiao.md)
+* [如何在HTML网页中调起APP](ru-he-zai-html-wang-ye-zhong-diao-qi-app.md)
 
