@@ -14,4 +14,5 @@
 * [前端构建工具gulpjs的使用介绍及技巧](qian-duan-gou-jian-gong-ju-gulpjs-de-shi-yong-jie-shao-ji-ji-qiao.md)
 * [如何在HTML网页中调起APP](ru-he-zai-html-wang-ye-zhong-diao-qi-app.md)
 * [如何将angularJs项目与requireJs集成](ru-he-jiang-angularjs-xiang-mu-yu-requirejs-ji-cheng.md)
+* [require简明](requirejian-ming.md)
 
