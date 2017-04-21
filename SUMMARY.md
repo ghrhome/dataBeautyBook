@@ -16,4 +16,5 @@
 * [如何将angularJs项目与requireJs集成](ru-he-jiang-angularjs-xiang-mu-yu-requirejs-ji-cheng.md)
 * [require简明](requirejian-ming.md)
 * [requirejs\_A篇](requirejsa-pian.md)
+* [requirejs 加载深入](requirejs-jia-zai-shen-ru.md)
 
