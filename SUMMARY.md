@@ -15,4 +15,5 @@
 * [如何在HTML网页中调起APP](ru-he-zai-html-wang-ye-zhong-diao-qi-app.md)
 * [如何将angularJs项目与requireJs集成](ru-he-jiang-angularjs-xiang-mu-yu-requirejs-ji-cheng.md)
 * [require简明](requirejian-ming.md)
+* [requirejs\_A篇](requirejsa-pian.md)
 
