@@ -6,25 +6,29 @@
 
 -scripts文件夹
 
-   --controller文件夹
+--controller文件夹
 
-      --- mianController.js
+```
+  --- mianController.js
 
-      --- controller1.js
+  --- controller1.js
 
-      ---controller2.js
+  ---controller2.js
+```
 
-   --directives文件夹
+--directives文件夹
 
-      ---mainDirective.js
+```
+  ---mainDirective.js
 
-      ---directive.js
+  ---directive.js
+```
 
-   --app.js
+--app.js
 
-   --router.js
+--router.js
 
-   --main.js
+--main.js
 
 **二、首页**
 
@@ -48,7 +52,7 @@
 
 在首页index.html只需要引入requireJs库文件，并且指明入口函数main.js，采用手动启动angularjs应用，所以这里不用为首页添加ng-app='webApp'。
 
-**三、配置mian.js**
+**三、配置main.js**
 
 ```
 require.config({
@@ -199,26 +203,4 @@ define(['angular'], function (angular) {
 同理mianDirective.js也类似。参考控制器
 
 **九、其他**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
