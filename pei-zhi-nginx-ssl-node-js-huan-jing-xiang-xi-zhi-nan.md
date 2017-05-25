@@ -22,5 +22,17 @@ Nginx安装完毕后，你可以用下面的命令来启动Nginx
 
 > `sudo nginx`
 
+最后你可以在目录`/usr/local/etc/nginx/nginx.conf`下看到Nginx的配置文件。
+
+**在Ubuntu上安装Nginx**
+
+如果你使用Ubuntu，那么可以用以下方式安装Nginx：
+
+> `sudo apt-get update`
+
+> `sudo apt-get install nginx`
+
+
+
 
 
