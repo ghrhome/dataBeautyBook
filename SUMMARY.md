@@ -20,4 +20,5 @@
 * [在线文本编辑器实现原理](zai-xian-wen-ben-bian-ji-qi-shi-xian-yuan-li.md)
 * [TinyMCE 4.x Preformatted Text and Syntax Highlighting](tinymce-4x-preformatted-text-and-syntax-highlighting.md)
 * [Google 官方应用架构的最佳实践指南](google-guan-fang-ying-yong-jia-gou-de-zui-jia-shi-jian-zhi-nan.md)
+* [浅谈Web网站架构演变过程](qian-tan-web-wang-zhan-jia-gou-yan-bian-guo-cheng.md)
 
