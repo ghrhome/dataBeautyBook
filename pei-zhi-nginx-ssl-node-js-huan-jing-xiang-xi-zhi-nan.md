@@ -12,5 +12,11 @@ Nginx是一款高性能的HTTP服务器，同时也是一款高效的反向代�
 
 > `sudo chown -R ‘username here’ /usr/local`
 
+接下来的两行命令就可以安装Nginx了：
+
+> `brew link pcre`
+>
+> `brew install nginx`
+
 
 
