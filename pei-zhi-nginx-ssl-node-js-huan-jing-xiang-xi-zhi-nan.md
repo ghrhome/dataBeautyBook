@@ -53,7 +53,7 @@ windows版本的nginx可以在这里下载，接下来将安装包解压放到�
 首先我们来创建一个简单的Node.js服务器，你可以在这里下载Express版本的Node.js。下载源代码后，将其解压至demoApp文件夹下，并且输入以下命令让服务器在3000端口上启动。
 
 > `npm install`
-
+>
 > `node bin/www`
 
 ## 配置nginx
@@ -61,6 +61,138 @@ windows版本的nginx可以在这里下载，接下来将安装包解压放到�
 在MAC上，可以直接使用nano进行安装
 
 > `nano /usr/local/etc/nginx/nginx.conf`
+
+如果需要，你也可以直接到文件夹下用你最喜欢的
+
+文本编辑器
+
+打开config文件，你可以在文件中找到`server`配置节点，类似下面的代码：
+
+```
+server {
+listen       8080;
+server_name  localhost;
+ 
+….
+more config goes here
+}
+```
+
+接下来我们将对
+
+`server`
+
+ 节点作一些符合自己需求的配置，我们需要把网站中的静态文件请求交给Nginx处理，其他的文件请求则交给Node.js后端服务器。我们将用下面的代码替换上面的`server`配置节点：
+
+```
+server {
+listen       8080;
+server_name  localhost;
+ 
+location / {
+proxy_pass http://localhost:3000;
+proxy_http_version 1.1;
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection ‘upgrade’;
+proxy_set_header Host $host;
+proxy_cache_bypass $http_upgrade;
+}
+ 
+location /public {
+root /usr/local/var/www;
+}
+ 
+}
+
+```
+
+这样我们就让Nginx在`http://localhost:8080`. 上监听了。`location /` 配置节点将告诉Nginx接收任意的请求，`location` 配置节点中我们用`proxy_pass` 指定了Node.js的后端服务器为`http://localhost:3000` 。
+
+现在我们要用另外一个配置节点`location /public` 来告诉Nginx处理静态文件请求，其中内部的`location` 节点设置了根目录为`/usr/local/var/www`. 当然你也可以换成其他的目录。如此一来，当有类似这样的请求`http://localhost:8080/public/somepath/file.html` ，Nginx都会从`/usr/local/var/www/public/somepath/file.html`读取静态文件。
+
+修改完配置文件后，你需要用下面的代码来重启Nginx：
+
+**Mac**
+
+```
+sudo nginx -s stop &amp;&amp; sudo nginx
+```
+
+**Ubuntu：**
+
+```
+sudo service nginx restart
+```
+
+或者
+
+```
+sudo /etc/init.d/nginx restart
+```
+
+**Windows：**
+
+```
+nginx -s reload
+```
+
+接下来我们来用Nginx来代替Node.js提供CSS样式文件，Node.js模板用的是
+
+`/public/stylesheets/style.css`下面的文件。在`/usr/local/var/www/public/stylesheets`文件夹下创建一个名为
+
+`style.css`的文件，Nginx将会正确地解析到它。比如你可以在CSS文件中写入以下代码：
+
+```
+body {
+padding: 50px;
+font: 14px “Lucida Grande”, Helvetica, Arial, sans-serif;
+}
+ 
+a {
+color: #00B7FF;
+}
+```
+
+然后你可以登录`http://localhost:8080`下来看自己的web应用，你会发现尽管是访问Nginx服务器，但是请求都是通过真实的Node.js后端服务器处理的，只有CSS静态文件由Nginx处理。
+
+## 创建SSL
+
+网站产品做多了，你会发现需要创建SSL来保护敏感的信息。可能你第一反应会想到从证书颁发机构申请网站证书，但是你也可以创建签名证书。唯一的问题就是浏览器端会提示“该证书不可信”的警告信息，但是作为本地测试，这也就足够了。这里有一篇教程讲解了如何自己创建签名SSL证书，可以看看。
+
+当你有了自己的证书，你就可以在Nginx上安装SSL了，修改后的配置文件，代码如下：
+
+```
+server {
+listen       8080;
+listen       443 ssl;
+server_name  localhost;
+ 
+ssl_certificate  /etc/nginx/ssl/server.crt
+ssl_certificate_key /etc/nginx/ssl/server.key
+ 
+location / {
+proxy_pass http://localhost:3000;
+proxy_http_version 1.1;
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection ‘upgrade’;
+proxy_set_header Host $host;
+proxy_cache_bypass $http_upgrade;
+}
+ 
+location /public {
+root /usr/local/var/www;
+}
+ 
+}
+```
+
+完成了！这样当你访问`https://localhost:8080` 的时候SSL就可以开始工作了。这里我们默认将证书保存在`/etc/nginx/ssl/server.crt` 目录下。将私钥保存在`/etc/nginx/ssl/server.key` 目录下，你也可以改变保存的目录。
+
+## 总结
+
+本文中我们学到了如何用Nginx为Node.js做反向代理，并且配置SSL。由Nginx在前端处理静态文件请求，这可以为Node.js后端服务器大大减轻压力。自己尝试一下吧，有什么问题可以在评论中交流。
+
+
 
 
 
