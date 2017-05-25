@@ -18,4 +18,6 @@
 * [requirejs\_A篇](requirejsa-pian.md)
 * [requirejs 加载深入](requirejs-jia-zai-shen-ru.md)
 * [在线文本编辑器实现原理](zai-xian-wen-ben-bian-ji-qi-shi-xian-yuan-li.md)
+* [TinyMCE 4.x Preformatted Text and Syntax Highlighting](tinymce-4x-preformatted-text-and-syntax-highlighting.md)
+* [Google 官方应用架构的最佳实践指南](google-guan-fang-ying-yong-jia-gou-de-zui-jia-shi-jian-zhi-nan.md)
 
