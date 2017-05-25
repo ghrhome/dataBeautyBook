@@ -21,4 +21,5 @@
 * [TinyMCE 4.x Preformatted Text and Syntax Highlighting](tinymce-4x-preformatted-text-and-syntax-highlighting.md)
 * [Google 官方应用架构的最佳实践指南](google-guan-fang-ying-yong-jia-gou-de-zui-jia-shi-jian-zhi-nan.md)
 * [浅谈Web网站架构演变过程](qian-tan-web-wang-zhan-jia-gou-yan-bian-guo-cheng.md)
+* [配置Nginx SSL Node.js环境详细指南](pei-zhi-nginx-ssl-node-js-huan-jing-xiang-xi-zhi-nan.md)
 
