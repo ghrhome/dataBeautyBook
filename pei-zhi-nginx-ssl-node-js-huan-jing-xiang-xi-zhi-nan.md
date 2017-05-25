@@ -29,10 +29,20 @@ Nginx安装完毕后，你可以用下面的命令来启动Nginx
 如果你使用Ubuntu，那么可以用以下方式安装Nginx：
 
 > `sudo apt-get update`
-
+>
 > `sudo apt-get install nginx`
 
+Nginx安装完成后便可自动启动。
 
+**在Windows下安装Nginx**
+
+windows版本的nginx可以在这里下载，接下来将安装包解压放到指定目录下，在cmd命令工具下运行以下代码：
+
+> `unzip nginx-1.3.13.zip`
+>
+> `cd nginx-1.3.13`
+
+> `start nginx`
 
 
 
