@@ -9,7 +9,7 @@ var img = new Image();
 img.src = 'a.jpg';
 img.onload = init; // 图片加载完开始转换
 fileBtn.onchange = getImg;
-  
+
 // 根据灰度生成相应字符
 function toText(g) {
     if (g <= 30) {
@@ -30,13 +30,13 @@ function toText(g) {
         return '&nbsp;';
     }
 }
-  
-  
+
+
 // 根据rgb值计算灰度
 function getGray(r, g, b) {
     return 0.299 * r + 0.578 * g + 0.114 * b;
 }
-  
+
 // 转换
 function init() {
     txtDiv.style.width = img.width + 'px';
@@ -63,7 +63,7 @@ function init() {
     }
     txtDiv.innerHTML = html;
 }
-  
+
 // 获取图片
 function getImg(file) {
     var reader = new FileReader();
