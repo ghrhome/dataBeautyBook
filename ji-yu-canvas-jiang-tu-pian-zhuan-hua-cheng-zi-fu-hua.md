@@ -74,5 +74,30 @@ function getImg(file) {
 }
 ```
 
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        p {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 12px;
+            line-height: 12px;
+        }
+    </style>
+
+</head>
+<body>
+    <canvas id="cv"></canvas>
+    <div id="txt"></div>
+    <input type="file" id="up-button">
+    <script src="canvasTest.js"></script>
+</body>
+</html>
+```
+
 
 
