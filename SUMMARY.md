@@ -23,4 +23,5 @@
 * [浅谈Web网站架构演变过程](qian-tan-web-wang-zhan-jia-gou-yan-bian-guo-cheng.md)
 * [配置Nginx SSL Node.js环境详细指南](pei-zhi-nginx-ssl-node-js-huan-jing-xiang-xi-zhi-nan.md)
 * [10+最佳的Node.js 教程和实例](10zui-jia-de-node-js-jiao-cheng-he-shi-li.md)
+* [基于 canvas 将图片转化成字符画](ji-yu-canvas-jiang-tu-pian-zhuan-hua-cheng-zi-fu-hua.md)
 
