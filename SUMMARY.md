@@ -24,4 +24,6 @@
 * [配置Nginx SSL Node.js环境详细指南](pei-zhi-nginx-ssl-node-js-huan-jing-xiang-xi-zhi-nan.md)
 * [10+最佳的Node.js 教程和实例](10zui-jia-de-node-js-jiao-cheng-he-shi-li.md)
 * [基于 canvas 将图片转化成字符画](ji-yu-canvas-jiang-tu-pian-zhuan-hua-cheng-zi-fu-hua.md)
+* [Angular\_Application-Configuration.js - 引导程序和配置文件](application-configurationjs-yin-dao-cheng-xu-he-pei-zhi-wen-jian.md)
+* [运气与机率 - 绝不输钱的马丁格尔套利策略\(汇总修正版）](yun-qi-yu-ji-lv-jue-bu-shu-qian-de-ma-ding-ge-er-tao-li-ce-756528-hui-zong-xiu-zheng-ban-ff09.md)
 
