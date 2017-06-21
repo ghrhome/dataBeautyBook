@@ -2,7 +2,7 @@
 
 ### 一、方法引用来源和应用
 
- 此动态加载css方法 loadCss，剥离自Sea.js，并做了进一步的优化（优化代码后续会进行分析）。  
+此动态加载css方法 loadCss，剥离自Sea.js，并做了进一步的优化（优化代码后续会进行分析）。  
  因为公司项目需要用到懒加载来提高网站加载速度，所以将非首屏渲染必需的css文件进行动态加载操作。
 
 ### 二、优化后的完整代码
@@ -123,19 +123,19 @@
 
 ##### 一、参数
 
- 本方法支持三个参数，可进行扩展。
+本方法支持三个参数，可进行扩展。
 
 **1.1 opations.url**
 
- url是需要引入的css资源路径，也即&lt;link&gt;标签的href属性内容。
+url是需要引入的css资源路径，也即&lt;link&gt;标签的href属性内容。
 
 **1.2 options.id**
 
- id是&lt;link&gt;标签的id属性。这个参数为非必要参数，可不传。主要作用是标记当前&lt;link&gt;标签，方便js进行查找，以确定是否已加载某个css文件。
+id是&lt;link&gt;标签的id属性。这个参数为非必要参数，可不传。主要作用是标记当前&lt;link&gt;标签，方便js进行查找，以确定是否已加载某个css文件。
 
 **1.3 options.callback**
 
- callback是css文件加载完成后会调用的回调函数。也存在特殊场景下，文件加载失败，回调函数仍旧执行的情况。
+callback是css文件加载完成后会调用的回调函数。也存在特殊场景下，文件加载失败，回调函数仍旧执行的情况。
 
 ##### 二、生成&lt;link&gt;标签，并插入头部head，进行加载资源
 
@@ -159,7 +159,7 @@ document.getElementsByTagName("head")[0].appendChild(node);
 
 ##### 三、实现css资源下载状态监控的pollCss方法
 
- pollCss方法的职责是判断插入的link节点，也即node变量反馈资源是否已加载完成。  
+pollCss方法的职责是判断插入的link节点，也即node变量反馈资源是否已加载完成。  
 **3.1 判断的主要依据**  
  浏览器加载css资源，会给该link节点生成sheet属性，可以根据浏览器不同，读取sheet属性相关内容，来判断是否已经加载完成。所以第一句语句`var sheet = node.sheet`首先要做的就是获取sheet属性值。  
 **3.2 普通浏览器判断**
@@ -192,7 +192,6 @@ if(isOldWebKit){
         isLoaded = true;
     }
 }
-
 ```
 
 如果是webkit旧内核浏览器，则只需要判断sheet属性值存在，则代表资源加载完成。
@@ -242,10 +241,69 @@ if(step > protectNum){
 **4.1 pollCss轮询的应用场景**  
  当浏览器内核是旧的webkit内核时，或者不支持&lt;link&gt;节点触发onload方法时，才使用pollCss进行轮询。
 
-  
+```
+// for Old WebKit and Old Firefox
+if (isOldWebKit || !supportOnload) {
+    // Begin after node insertion
+    setTimeout(function() {
+        pollCss(node, callback, 0);
+    }, 1);
+    return;
+}
+```
 
+##### 五、现代浏览器直接用onload和onreadystatechange做判断
 
+ 现代浏览器用这种方式判断，可以避免轮询的弊端。判断也更加准确及时。
 
+**5.1 onload方法**
 
+```
+function onload() {
+    // 确保只跑一次下载操作
+    node.onload = node.onerror = node.onreadystatechange = null;
 
+    // 清空node引用，在低版本IE，不清除会造成内存泄露
+    node = null;
+
+    callback();
+}
+```
+
+onload方法触发执行后，应立即将多个相关方法进行重置，以避免callback多次触发。  
+`node = null;`将node重置为null，是为了避免低版本的IE出现内存溢出问题，及时清除没用的dom节点。  
+ 最后，执行callback方法。
+
+**5.2 支持onload方法浏览器的处理**
+
+```
+if(supportOnload){
+    node.onload = onload;
+    node.onerror = function() {
+        // 加载失败(404)
+        onload();
+    }
+}
+
+```
+
+**5.3 不支持onload方法浏览器的处理**
+
+```
+if(supportOnload){
+    // 代码...
+}else{
+    node.onreadystatechange = function() {
+        if (/loaded|complete/.test(node.readyState)) {
+            onload();
+        }
+    }
+}
+```
+
+### 四、后记
+
+ 选择剥离Sea.js方法进行改造的原因：因为该js库使用人群很广泛，如果出问题，作者也会及时修复。所以，以此代码为蓝本进行改造契合公司的用户群，避免大面积出现问题。  
+ 在产品上应用该方法后，到目前为止，未有客户反馈样式异常问题。所以，看本文章的程序猿们，可以放心使用。  
+ ps：公司用户群有1千多万的用户量，涉及大大小小繁杂的浏览器，从IE6到chrome都有。
 
