@@ -92,7 +92,9 @@ myApp.factory('greeter', function(salut) {
 });
 ```
 
-    然后可以这样来调用它：
+```
+然后可以这样来调用它：
+```
 
 ```
 var myGreeter = greeter('Halo');
@@ -100,25 +102,21 @@ var myGreeter = greeter('Halo');
 
 9.service\(name,object\)
 
-```
     factory和service之间的不同点在于，factory会直接调用传递给它的函数，然后返回执行的结果；而service将会使用"new"关键字来调用传递给它的构造方法，然后再返回结果。所以，前面的greeter Factory可以替换成下面这个greeter Service：
-```
 
 ```
 myApp.service('greeter', Greeter);
 ```
 
-```
-    每当我们需要一个greeter实例的时候，AngularJS就会调用新的Greeter\(\)来返回一个实例。
-```
+    每当我们需要一个greeter实例的时候，AngularJS就会调用新的Greeter\\(\\)来返回一个实例。
 
 10.provider\(name,providerFn\)
 
-```
     provider是这几个方法中最复杂的部分（显然，也是可配置性最好的部分）。provider中既绑定了factory也绑定了service，并且在注入系统准备完毕之前，还可以享受到配置provider函数的好处（也就是config块）。
 
+
+
     我们来看看使用provider改造之后的greeter Service是什么样子：
-```
 
 ```
 myApp.provider('greeter', function() {
