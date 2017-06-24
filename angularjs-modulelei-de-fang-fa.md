@@ -102,21 +102,27 @@ var myGreeter = greeter('Halo');
 
 9.service\(name,object\)
 
-    factory和service之间的不同点在于，factory会直接调用传递给它的函数，然后返回执行的结果；而service将会使用"new"关键字来调用传递给它的构造方法，然后再返回结果。所以，前面的greeter Factory可以替换成下面这个greeter Service：
+```
+factory和service之间的不同点在于，factory会直接调用传递给它的函数，然后返回执行的结果；而service将会使用"new"关键字来调用传递给它的构造方法，然后再返回结果。所以，前面的greeter Factory可以替换成下面这个greeter Service：
+```
 
 ```
 myApp.service('greeter', Greeter);
 ```
 
-    每当我们需要一个greeter实例的时候，AngularJS就会调用新的Greeter\\(\\)来返回一个实例。
+```
+每当我们需要一个greeter实例的时候，AngularJS就会调用新的Greeter\\(\\)来返回一个实例。
+```
 
 10.provider\(name,providerFn\)
 
-    provider是这几个方法中最复杂的部分（显然，也是可配置性最好的部分）。provider中既绑定了factory也绑定了service，并且在注入系统准备完毕之前，还可以享受到配置provider函数的好处（也就是config块）。
+```
+provider是这几个方法中最复杂的部分（显然，也是可配置性最好的部分）。provider中既绑定了factory也绑定了service，并且在注入系统准备完毕之前，还可以享受到配置provider函数的好处（也就是config块）。
 
 
 
-    我们来看看使用provider改造之后的greeter Service是什么样子：
+我们来看看使用provider改造之后的greeter Service是什么样子：
+```
 
 ```
 myApp.provider('greeter', function() {
@@ -153,19 +159,17 @@ greeterProvider.setSalutation('Namaste');
 
 附：angular.module\('MyApp',\[...\]\)和angular.module\('MyApp'\)之间有一个很小但是却很重要的不同点
 
-```
-    angular.module\('MyApp',\[...\]\)会创建一个新的Angular模块，然后把方括号（\[...\]）中的依赖列表加载进来；而angular.module\('MyApp'\)会使用由第一个调用定义的现有的模块。
+    angular.module\\('MyApp',\\[...\\]\\)会创建一个新的Angular模块，然后把方括号（\\[...\\]）中的依赖列表加载进来；而angular.module\\('MyApp'\\)会使用由第一个调用定义的现有的模块。
+
+
 
     所以，对于以下代码，你需要保证在整个应用中只会使用一次：
-```
 
 ```
 angular.module('MyApp', [...]) //如果你的应用是模块化的，这里可能是MyModule
 ```
 
-```
-    如果你不打算把模块的引用存到一个变量中，然后在整个应用中通过这个变量来引用模块，那么，在其他文件中使用angular.module\(MyApp\)的方式可以保证得到正确的AngularJS模块引用。模块上的所有东西都必须通过访问这个模块引用来定义，或者在模块定义的地方把那些必备的内容添加上去。
-```
+    如果你不打算把模块的引用存到一个变量中，然后在整个应用中通过这个变量来引用模块，那么，在其他文件中使用angular.module\\(MyApp\\)的方式可以保证得到正确的AngularJS模块引用。模块上的所有东西都必须通过访问这个模块引用来定义，或者在模块定义的地方把那些必备的内容添加上去。
 
 
 
