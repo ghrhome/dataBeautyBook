@@ -28,4 +28,5 @@
 * [运气与机率 - 绝不输钱的马丁格尔套利策略\(汇总修正版）](yun-qi-yu-ji-lv-jue-bu-shu-qian-de-ma-ding-ge-er-tao-li-ce-756528-hui-zong-xiu-zheng-ban-ff09.md)
 * [动态加载css方法实现和深入解析](dong-tai-jia-zai-css-fang-fa-shi-xian-he-shen-ru-jie-xi.md)
 * [AngularJS Module类的方法](angularjs-modulelei-de-fang-fa.md)
+* [jQuery的deferred对象详解](jqueryde-deferred-dui-xiang-xiang-jie.md)
 
