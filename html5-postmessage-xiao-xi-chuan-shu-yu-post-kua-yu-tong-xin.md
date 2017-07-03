@@ -99,19 +99,84 @@ timedCount();
 postMessage("After computing," + new Date());
 ```
 
+## 3. 跨域 {#3. 跨域}
 
+同源跨域可通过修改 window.domain 方式欺骗解决。  
+非同源跨域可使用 flash 控件或远程加载script文件的 jsonp 方式。
 
+现在 postMessage 则可简单完成该需求，重要的是，它可以实现 jsonp 无法完成的跨域 POST 请求。
 
+### 3.1 父窗体创建跨域iframe并发送信息 {#3.1 父窗体创建跨域iframe并发送信息}
 
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>跨域POST消息发送</title>
+<script type="text/JavaScript">
+function sendPost() {
+    var iframeWin = document.getElementById("otherPage").contentWindow;
+    iframeWin.postMessage( document.getElementById("message").value, "http://w.lzw.me:81");
+}
 
+window.addEventListener("message", function( event ) {
+    console.log(event, event.data);
+}, false);
+</script>
+</head>
+<body>
+<textarea id="message"></textarea>
+<input type="button" value="发送" onclick="sendPost()">
+<iframe src="http://w.lzw.me:81/other-domain.html" id="otherPage" style="display:none"></iframe>
+</body>
+</html>
+```
 
+### 3.2 子窗体接收信息并处理（如发起XMLHttpRequest请求） {#3.2 子窗体接收信息并处理（如发起XMLHttpRequest请求）}
 
+other-domain.html
 
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>POST Handler</title>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/JavaScript">
+window.addEventListener("message", function (event) {
+    // 把父窗口发送过来的数据向服务器发送post请求
+    var data = event.data;
+    $.ajax({
+        type: 'POST',
+        data: "info=" + data,
+        dataType: "json"
+    }).done(function (res) {
+        //可以向父窗体返回结果
+        window.parent.postMessage(res, "*");
+    }).fail(function (res) {
+        window.parent.postMessage(res, "*");
+    });
+}, false);
+</script>
+</head>
+<body>
+</body>
+</html>
+```
 
+## 4. postMessage 总结 {#4. postMessage 总结}
 
+postMessage 解决了客户端不同窗体间的消息传递问题，特别是跨域消息发送，可解决跨域 POST 请求问题。
 
+另外，解决客户端与服务器的双向实时通信，可参考 HTML5 的 webSocket API.
 
+## 5. 相关参考 {#5. 相关参考}
 
+http://www.ibm.com/developerworks/cn/web/1301\_jiangjj\_html5message/
 
 
 
