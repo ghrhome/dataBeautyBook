@@ -29,4 +29,5 @@
 * [动态加载css方法实现和深入解析](dong-tai-jia-zai-css-fang-fa-shi-xian-he-shen-ru-jie-xi.md)
 * [AngularJS Module类的方法](angularjs-modulelei-de-fang-fa.md)
 * [jQuery的deferred对象详解](jqueryde-deferred-dui-xiang-xiang-jie.md)
+* [HTML5 postMessage 消息传输与 POST 跨域通信](html5-postmessage-xiao-xi-chuan-shu-yu-post-kua-yu-tong-xin.md)
 
