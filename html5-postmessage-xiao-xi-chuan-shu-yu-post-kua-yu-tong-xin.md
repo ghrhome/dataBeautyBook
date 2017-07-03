@@ -176,7 +176,13 @@ postMessage 解决了客户端不同窗体间的消息传递问题，特别是�
 
 ## 5. 相关参考 {#5. 相关参考}
 
-http://www.ibm.com/developerworks/cn/web/1301\_jiangjj\_html5message/
+[http://www.ibm.com/developerworks/cn/web/1301\_jiangjj\_html5message/](http://www.ibm.com/developerworks/cn/web/1301_jiangjj_html5message/)
+
+
+
+--------------------补充 中间页面实现跨域
+
+# **iframe跨域访问**
 
 
 
