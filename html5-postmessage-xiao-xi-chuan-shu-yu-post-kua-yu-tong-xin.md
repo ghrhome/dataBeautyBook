@@ -178,11 +178,109 @@ postMessage 解决了客户端不同窗体间的消息传递问题，特别是�
 
 [http://www.ibm.com/developerworks/cn/web/1301\_jiangjj\_html5message/](http://www.ibm.com/developerworks/cn/web/1301_jiangjj_html5message/)
 
-
-
 --------------------补充 中间页面实现跨域
 
 # **iframe跨域访问**
+
+  
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 15.0px Verdana; -webkit-text-stroke: \#000000}  
+span.s1 {font-kerning: none}  
+
+
+js跨域是个讨论很多的话题。iframe跨域访问也被研究的很透了。
+
+一般分两种情况：
+
+一、 是同主域下面，不同子域之间的跨域；
+
+　　同主域，不同子域跨域，设置相同的document.domian就可以解决;
+
+     父页访问子页，可以document.getElementById\("myframe"\).contentWindow.document来访问iframe页面的内容；如果支持contentDocument也可以直接document.getElementById\("myframe"\).contentDocument访问子页面内容；
+
+　　子页访问父页，可以parent.js全局属性
+
+二、 是不同主域跨域；
+
+　　前提，www.a.com下a.html，a.html内iframe调用了www.b.com下的b.html，b.html下iframe调用了www.a.com下的c.html
+
+　　b.html是不无法直接访问a.html的对象，因为涉及到跨域，但可以访问parent，同样c.html的parent可以访问b.html。c.html和a.html同域，是可以访问a下的对象的。parent.parent.js对象!
+
+　　看下面实例：
+
+　　a.html
+
+```
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+<iframe src="http://www.b.com/b.html" ></iframe>
+<ul id="getText"></ul>
+<script>
+    function dosome(text){
+        document.getElementById("getText").innerHTML= decodeURI(text);    
+    }
+</script>
+</body>
+</html>
+```
+
+b.html
+
+```
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+<iframe id="myfarme" src="###"></iframe>
+<ul id="ct">
+<li>这里是内容1</li>
+<li>这里是内容2</li>
+<li>这里是内容3</li>
+<li>这里是内容4</li>
+<li>这里是内容5</li>
+<li>这里是内容6</li>
+</ul>
+<script>
+    window.onload = function(){
+        var text = document.getElementById('ct').innerHTML;
+        document.getElementById('myfarme').src="http://www.a.com/c.html?content="+encodeURI(text);
+    }
+</script>
+</body>
+</html>
+```
+
+c.html
+
+```
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<script>
+window.onload = function(){
+    var text = window.location.href.split('=')[1]
+    console.log(parent.parent)
+    parent.parent.dosome(text);
+}
+</script>
+</head>
+
+<body>
+ddddddddddd
+</body>
+</html>
+```
 
 
 
