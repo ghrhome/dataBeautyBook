@@ -30,4 +30,5 @@
 * [AngularJS Module类的方法](angularjs-modulelei-de-fang-fa.md)
 * [jQuery的deferred对象详解](jqueryde-deferred-dui-xiang-xiang-jie.md)
 * [HTML5 postMessage 消息传输与 POST 跨域通信](html5-postmessage-xiao-xi-chuan-shu-yu-post-kua-yu-tong-xin.md)
+* [一文读懂卷积神经网络](yi-wen-du-dong-juan-ji-shen-jing-wang-luo.md)
 

@@ -182,10 +182,8 @@ postMessage 解决了客户端不同窗体间的消息传递问题，特别是�
 
 # **iframe跨域访问**
 
-  
 p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 15.0px Verdana; -webkit-text-stroke: \#000000}  
-span.s1 {font-kerning: none}  
-
+span.s1 {font-kerning: none}
 
 js跨域是个讨论很多的话题。iframe跨域访问也被研究的很透了。
 
@@ -193,21 +191,23 @@ js跨域是个讨论很多的话题。iframe跨域访问也被研究的很透了
 
 一、 是同主域下面，不同子域之间的跨域；
 
-　　同主域，不同子域跨域，设置相同的document.domian就可以解决;
+同主域，不同子域跨域，设置相同的document.domian就可以解决;
 
-     父页访问子页，可以document.getElementById\("myframe"\).contentWindow.document来访问iframe页面的内容；如果支持contentDocument也可以直接document.getElementById\("myframe"\).contentDocument访问子页面内容；
+```
+ 父页访问子页，可以document.getElementById\("myframe"\).contentWindow.document来访问iframe页面的内容；如果支持contentDocument也可以直接document.getElementById\("myframe"\).contentDocument访问子页面内容；
+```
 
-　　子页访问父页，可以parent.js全局属性
+子页访问父页，可以parent.js全局属性
 
 二、 是不同主域跨域；
 
-　　前提，www.a.com下a.html，a.html内iframe调用了www.b.com下的b.html，b.html下iframe调用了www.a.com下的c.html
+前提，www.a.com下a.html，a.html内iframe调用了www.b.com下的b.html，b.html下iframe调用了www.a.com下的c.html
 
-　　b.html是不无法直接访问a.html的对象，因为涉及到跨域，但可以访问parent，同样c.html的parent可以访问b.html。c.html和a.html同域，是可以访问a下的对象的。parent.parent.js对象!
+b.html是不无法直接访问a.html的对象，因为涉及到跨域，但可以访问parent，同样c.html的parent可以访问b.html。c.html和a.html同域，是可以访问a下的对象的。parent.parent.js对象!
 
-　　看下面实例：
+看下面实例：
 
-　　a.html
+a.html
 
 ```
 <!doctype html>
