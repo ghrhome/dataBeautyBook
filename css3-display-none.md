@@ -152,5 +152,29 @@ if(swiper.activeIndex==(slideCount-1)){
 }
 ```
 
+抽象jquery 扩展
+
+```
+ $.fn.extend({
+        animateCss: function (animationName) {
+            var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+            this.addClass('animated ' + animationName).one(animationEnd, function() {
+                $(this).removeClass('animated ' + animationName).addClass("done");
+            });
+        }
+    });
+
+    $.fn.extend({
+        animateRemove: function (animationName) {
+            var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+            this.addClass('animated ' + animationName).one(animationEnd, function() {
+                //$(this).removeClass('animated ' + animationName);
+                $(this).remove();
+            });
+        }
+    });
+
+```
+
 
 
