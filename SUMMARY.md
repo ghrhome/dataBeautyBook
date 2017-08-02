@@ -33,4 +33,5 @@
 * [一文读懂卷积神经网络](yi-wen-du-dong-juan-ji-shen-jing-wang-luo.md)
 * [Number formatMoney](number-formatmoney.md)
 * [chart Render\_data方式](chart-renderdata-fang-shi.md)
+* [Angular数据递归呈现](angularshu-ju-di-gui-cheng-xian.md)
 
