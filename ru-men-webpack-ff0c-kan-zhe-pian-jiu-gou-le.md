@@ -502,52 +502,14 @@ module.exports = {
 
   devServer: {...} // Omitted for brevity
 }
-
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
+//.babelrc
+{
+  "presets": ["react", "es2015"]
+}
+```
 
 
 
