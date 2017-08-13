@@ -844,7 +844,6 @@ module.exports = {
     inline: true
   }
 }
-
 ```
 
 #### Hot Module Replacement
@@ -923,9 +922,9 @@ npm install --save-dev babel-plugin-react-transform react-transform-hmr
     "plugins": [["react-transform", {
        "transforms": [{
          "transform": "react-transform-hmr",
-         
+
          "imports": ["react"],
-         
+
          "locals": ["module"]
        }]
      }]]
@@ -981,7 +980,6 @@ module.exports = {
   ],
 
 }
-
 ```
 
 ```
@@ -1000,16 +998,6 @@ module.exports = {
   "dependencies": {...}
 }
 ```
-
-
-
-
-
-
-
-
-
-
 
 
 
