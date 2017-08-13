@@ -523,9 +523,6 @@ webpack提供两个工具处理样式表，`css-loader` 和 `style-loader`，二
 
 webpack使用loader的方式来处理各种各样的资源，比如说样式文件，我们需要两种loader，css-loader 和 style－loader，css-loader会遍历css文件，找到所有的url\(...\)并且处理。style-loader会把所有的样式插入到你页面的一个style tag中。
 
-  
-
-
 继续上面的例子
 
 ```
