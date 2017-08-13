@@ -595,38 +595,190 @@ import Greeter from './Greeter';
 import './main.css';//使用require导入css文件
 
 render(<Greeter />, document.getElementById('root'));
-
 ```
 
 > 通常情况下，css会和js打包到同一个文件中，并不会打包为一个单独的css文件，不过通过合适的配置webpack也可以把css打包为单独的文件的。
 
 上面的代码说明webpack是怎么把css当做模块看待的，咱们继续看一个更加真实的css模块实践。
 
+#### CSS module
 
+在过去的一些年里，JavaScript通过一些新的语言特性，更好的工具以及更好的实践方法（比如说模块化）发展得非常迅速。模块使得开发者把复杂的代码转化为小的，干净的，依赖声明明确的单元，配合优化工具，依赖管理和加载管理可以自动完成。
 
+不过前端的另外一部分，CSS发展就相对慢一些，大多的样式表却依旧巨大且充满了全局类名，维护和修改都非常困难。
 
+最近有一个叫做 CSS modules 的技术就意在把JS的模块化思想带入CSS中来，通过CSS模块，所有的类名，动画名默认都只作用于当前模块。Webpack从一开始就对CSS模块化提供了支持，在CSS loader中进行配置后，你所需要做的一切就是把”modules“传递到所需要的地方，然后就可以直接把CSS的类名传递到组件的代码中，且这样做只对当前组件有效，不必担心在不同的模块中使用相同的类名造成冲突。具体的代码如下
 
+```
+module.exports = {
 
+    ...
 
+    module: {
+        rules: [
+            {
+                test: /(\.jsx|\.js)$/,
+                use: {
+                    loader: "babel-loader"
+                },
+                exclude: /node_modules/
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    {
+                        loader: "style-loader"
+                    }, {
+                        loader: "css-loader",
+                        options: {
+                            modules: true
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+};
 
+```
 
+在app文件夹下创建一个`Greeter.css`文件
 
+```
+.root {
+  background-color: #eee;
+  padding: 10px;
+  border: 3px solid #ccc;
+}
 
+```
 
+导入`.root`到Greeter.js中
 
+```
+import React, {Component} from 'react';
+import config from './config.json';
+import styles from './Greeter.css';//导入
 
+class Greeter extends Component{
+  render() {
+    return (
+      <div className={styles.root}>//添加类名
+        {config.greetText}
+      </div>
+    );
+  }
+}
 
+export default Greeter
+```
 
+放心使用把，相同的类名也不会造成不同组件之间的污染。
 
+![](/assets/1031000-607094f1f647d918.png)
 
+CSS modules 也是一个很大的主题，有兴趣的话可以去[官方文档](https://github.com/css-modules/css-modules)查看更多消息
 
+#### CSS预处理器
 
+`Sass` 和 `Less` 之类的预处理器是对原生CSS的拓展，它们允许你使用类似于`variables`, `nesting`, `mixins`, `inheritance`等不存在于CSS中的特性来写CSS，CSS预处理器可以这些特殊类型的语句转化为浏览器可识别的CSS语句，
 
+你现在可能都已经熟悉了，在webpack里使用相关loaders进行配置就可以使用了，以下是常用的CSS 处理`loaders`:
 
+* `Less Loader`
+* `Sass Loader`
+* `Stylus Loader`
 
+不过其实也存在一个CSS的处理平台`-PostCSS`，它可以帮助你的CSS实现更多的功能，在其[CSS官方文档](https://github.com/postcss/postcss)可了解更多相关知识。
 
+举例来说如何使用PostCSS，我们使用PostCSS来为CSS代码自动添加适应不同浏览器的CSS前缀。
 
+首先安装postcss-loader 和 autoprefixer（自动添加前缀的插件）
 
+```
+npm install --save-dev postcss-loader autoprefixer
 
+```
+
+接下来，在webpack配置文件中进行设置，只需要新建一个postcss关键字，并在里面申明依赖的插件，如下，现在你写的css会自动根据Can i use里的数据添加不同前缀了。
+
+```
+//webpack配置文件
+module.exports = {
+  devtool: 'eval-source-map',
+  entry: __dirname + "/app/main.js",
+  output: {...},
+
+  module: {
+    loaders: [
+      {
+        test: /\.json$/,
+        loader: "json"
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel'
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css?modules!postcss'
+      }
+    ]
+  },
+
+  postcss: [
+    require('autoprefixer')//调用autoprefixer插件
+  ],
+
+  devServer: {...}
+}
+
+```
+
+到现在，本文已经涉及到处理JS的Babel和处理CSS的PostCSS，它们其实也是两个单独的平台，配合Webpack可以很好的发挥它们的作用。接下来介绍Webpack中另一个非常重要的功能-Plugins
+
+# 插件（Plugins）
+
+插件（Plugins）是用来拓展Webpack功能的，它们会在整个构建过程中生效，执行相关的任务。  
+ Loaders和Plugins常常被弄混，但是他们其实是完全不同的东西，可以这么来说，loaders是在打包构建过程中用来处理源文件的（JSX，Scss，Less..），一次处理一个，插件并不直接操作单个文件，它直接对整个构建过程其作用。
+
+Webpack有很多内置插件，同时也有很多第三方插件，可以让我们完成更加丰富的功能。
+
+#### 使用插件的方法
+
+要使用某个插件，我们需要通过npm安装它，然后要做的就是在webpack配置中的plugins关键字部分添加该插件的一个实例（plugins是一个数组）继续看例子，我们添加了一个实现版权声明的插件。
+
+```
+//webpack.config.js
+var webpack = require('webpack');
+
+module.exports = {
+  devtool: 'eval-source-map',
+  entry:  __dirname + "/app/main.js",
+  output: {...},
+
+  module: {
+    loaders: [
+      { test: /\.json$/, loader: "json" },
+      { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
+      { test: /\.css$/, loader: 'style!css?modules!postcss' }//这里添加PostCSS
+    ]
+  },
+  postcss: [
+    require('autoprefixer')
+  ],
+
+  plugins: [
+    new webpack.BannerPlugin("Copyright Flying Unicorns inc.")//在这个数组中new一个就可以了
+  ],
+
+  devServer: {...}
+}
+```
+
+通过这个插件，打包后的JS文件显示如下
+
+  
 
 
