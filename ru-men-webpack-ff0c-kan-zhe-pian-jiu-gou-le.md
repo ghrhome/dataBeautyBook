@@ -639,7 +639,6 @@ module.exports = {
         ]
     }
 };
-
 ```
 
 在app文件夹下创建一个`Greeter.css`文件
@@ -650,7 +649,6 @@ module.exports = {
   padding: 10px;
   border: 3px solid #ccc;
 }
-
 ```
 
 导入`.root`到Greeter.js中
@@ -697,7 +695,6 @@ CSS modules 也是一个很大的主题，有兴趣的话可以去[官方文档]
 
 ```
 npm install --save-dev postcss-loader autoprefixer
-
 ```
 
 接下来，在webpack配置文件中进行设置，只需要新建一个postcss关键字，并在里面申明依赖的插件，如下，现在你写的css会自动根据Can i use里的数据添加不同前缀了。
@@ -733,7 +730,6 @@ module.exports = {
 
   devServer: {...}
 }
-
 ```
 
 到现在，本文已经涉及到处理JS的Babel和处理CSS的PostCSS，它们其实也是两个单独的平台，配合Webpack可以很好的发挥它们的作用。接下来介绍Webpack中另一个非常重要的功能-Plugins
@@ -779,6 +775,241 @@ module.exports = {
 
 通过这个插件，打包后的JS文件显示如下
 
-  
+![](/assets/1031000-b23965c46ef0be56.png)知道Webpack中的插件如何使用了，下面给大家推荐几个常用的插件
+
+#### HtmlWebpackPlugin
+
+这个插件的作用是依据一个简单的模板，帮你生成最终的Html5文件，这个文件中自动引用了你打包后的JS文件。每次编译都在文件名中插入一个不同的哈希值。
+
+**安装**
+
+```
+npm install --save-dev html-webpack-plugin
+```
+
+这个插件自动完成了我们之前手动做的一些事情，在正式使用之前需要对一直以来的项目结构做一些改变：
+
+1. 移除public文件夹，利用此插件，HTML5文件会自动生成，此外CSS已经通过前面的操作打包到JS中了，public文件夹里。
+2. 在app目录下，创建一个Html文件模板，这个模板包含title等其它你需要的元素，在编译过程中，本插件会依据此模板生成最终的html页面，会自动添加所依赖的 css, js，favicon等文件，在本例中我们命名模板文件名称为index.tmpl.html，模板源代码如下
+
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Webpack Sample Project</title>
+  </head>
+  <body>
+    <div id='root'>
+    </div>
+  </body>
+</html>
+```
+
+3.更新webpack的配置文件，方法同上,新建一个build文件夹用来存放最终的输出文件
+
+```
+var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  devtool: 'eval-source-map',
+
+  entry:  __dirname + "/app/main.js",
+  output: {
+    path: __dirname + "/build",
+    filename: "bundle.js"
+  },
+
+  module: {
+    loaders: [
+      { test: /\.json$/, loader: "json" },
+      { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
+      { test: /\.css$/, loader: 'style!css?modules!postcss' }
+    ]
+  },
+  postcss: [
+    require('autoprefixer')
+  ],
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: __dirname + "/app/index.tmpl.html"//new 一个这个插件的实例，并传入相关的参数
+    })
+  ],
+
+  devServer: {
+    colors: true,
+    historyApiFallback: true,
+    inline: true
+  }
+}
+
+```
+
+#### Hot Module Replacement
+
+Hot Module Replacement（HMR）也是webpack里很有用的一个插件，它允许你在修改组件代码后，自动刷新实时预览修改后的效果。  
+ 在webpack中实现HMR也很简单，只需要做两项配置
+
+1. 在webpack配置文件中添加HMR插件；
+2. 在Webpack Dev Server中添加“hot”参数；
+
+不过配置完这些后，JS模块其实还是不能自动热加载的，还需要在你的JS模块中执行一个Webpack提供的API才能实现热加载，虽然这个API不难使用，但是如果是React模块，使用我们已经熟悉的Babel可以更方便的实现功能热加载。
+
+整理下我们的思路，具体实现方法如下
+
+* Babel和webpack是独立的工具
+* 二者可以一起工作
+* 二者都可以通过插件拓展功能
+* HMR是一个webpack插件，它让你能浏览器中实时观察模块修改后的效果，但是如果你想让它工作，需要对模块进行额外的配额；
+* Babel有一个叫做react-transform-hrm的插件，可以在不对React模块进行额外的配置的前提下让HMR正常工作；
+
+更新我们的例子来实际看看如何配置
+
+```
+//webpack中的配置
+var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  devtool: 'eval-source-map',
+  entry: __dirname + "/app/main.js",
+  output: {
+    path: __dirname + "/build",
+    filename: "bundle.js"
+  },
+
+  module: {
+    loaders: [
+      { test: /\.json$/, loader: "json" },
+      { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
+      { test: /\.css$/, loader: 'style!css?modules!postcss' }
+    ]
+  },
+  postcss: [
+    require('autoprefixer')
+  ],
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: __dirname + "/app/index.tmpl.html"
+    }),
+    new webpack.HotModuleReplacementPlugin()//热加载插件
+  ],
+
+  devServer: {
+    colors: true,
+    historyApiFallback: true,
+    inline: true,
+    hot: true
+  }
+}
+```
+
+安装react-transform-hmr
+
+```
+npm install --save-dev babel-plugin-react-transform react-transform-hmr
+```
+
+配置Babel
+
+```
+{
+  "presets": ["react", "es2015"],
+  "env": {
+    "development": {
+    "plugins": [["react-transform", {
+       "transforms": [{
+         "transform": "react-transform-hmr",
+         
+         "imports": ["react"],
+         
+         "locals": ["module"]
+       }]
+     }]]
+    }
+  }
+}
+```
+
+现在当你使用React时，可以热加载模块了
+
+### 产品阶段的构建
+
+目前为止，我们已经使用webpack构建了一个完整的开发环境。但是在产品阶段，可能还需要对打包的文件进行额外的处理，比如说优化，压缩，缓存以及分离CSS和JS。
+
+对于复杂的项目来说，需要复杂的配置，这时候分解配置文件为多个小的文件可以使得事情井井有条，以上面的例子来说，我们创建一个“webpack.production.config.js”的文件，在里面加上基本的配置,它和原始的webpack.config.js很像，如下
+
+```
+var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  entry: __dirname + "/app/main.js",
+  output: {
+    path: __dirname + "/build",
+    filename: "bundle.js"
+  },
+
+  module: {
+    loaders: [
+      {
+        test: /\.json$/,
+        loader: "json"
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel'
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css?modules!postcss'
+      }
+    ]
+  },
+  postcss: [
+    require('autoprefixer')
+  ],
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: __dirname + "/app/index.tmpl.html"
+    }),
+  ],
+
+}
+
+```
+
+```
+//package.json
+{
+  "name": "webpack-sample-project",
+  "version": "1.0.0",
+  "description": "Sample webpack project",
+  "scripts": {
+    "start": "webpack-dev-server --progress",
+    "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --progress"
+  },
+  "author": "Cássio Zen",
+  "license": "ISC",
+  "devDependencies": {...},
+  "dependencies": {...}
+}
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
