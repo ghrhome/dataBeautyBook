@@ -195,7 +195,43 @@ webpack {entry file} {destination for bundled file}
 node_modules/.bin/webpack app/main.js public/bundle.js
 ```
 
-结果如下![](/assets/1031000-b9e69a58e3518ba7.png)可以看出`webpack`同时编译了`main.js`和`Greeter,js`,现在打开`index.html`,可以看到如下结果
+![](/assets/1031000-b9e69a58e3518ba7.png)
+
+结果如下可以看出`webpack`同时编译了`main.js`和`Greeter,js`,现在打开`index.html`,可以看到如下结果
+
+![](/assets/1031000-6cf1ecc41ef8c31d.png)
+
+有没有很激动，已经成功的使用`Webpack`打包了一个文件了。不过在终端中进行复杂的操作，其实是不太方便且容易出错的，接下来看看Webpack的另一种更常见的使用方法。
+
+#### 通过配置文件来使用`Webpack`
+
+Webpack拥有很多其它的比较高级的功能（比如说本文后面会介绍的`loaders`和`plugins`），这些功能其实都可以通过命令行模式实现，但是正如前面提到的，这样不太方便且容易出错的，更好的办法是定义一个配置文件，这个配置文件其实也是一个简单的JavaScript模块，我们可以把所有的与打包相关的信息放在里面。
+
+继续上面的例子来说明如何写这个配置文件，在当前练习文件夹的根目录下新建一个名为`webpack.config.js`的文件，我们在其中写入如下所示的简单配置代码，目前的配置主要涉及到的内容是入口文件路径和打包后文件的存放路径。
+
+```
+module.exports = {
+  entry:  __dirname + "/app/main.js",//已多次提及的唯一入口文件
+  output: {
+    path: __dirname + "/public",//打包后的文件存放的地方
+    filename: "bundle.js"//打包后输出文件的文件名
+  }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
