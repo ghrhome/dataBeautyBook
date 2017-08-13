@@ -377,25 +377,101 @@ module.exports = function() {
 };
 ```
 
+> **注**由于`webpack3.*/webpack2.*`已经内置可处理JSON文件，这里我们无需再添加`webpack1.*`需要的`json-loader`。在看如何具体使用loader之前我们先看看Babel是什么？
 
+### Babel
 
+Babel其实是一个编译JavaScript的平台，它的强大之处表现在可以通过编译帮你达到以下目的：
 
+* 使用下一代的JavaScript代码（ES6，ES7...），即使这些标准目前并未被当前的浏览器完全的支持；
+* 使用基于JavaScript进行了拓展的语言，比如React的JSX；
 
+#### Babel的安装与配置
 
+Babel其实是几个模块化的包，其核心功能位于称为`babel-core`的npm包中，webpack可以把其不同的包整合在一起使用，对于每一个你需要的功能或拓展，你都需要安装单独的包（用得最多的是解析Es6的`babel-preset-es2015`包和解析JSX的`babel-preset-react`包）。
 
+我们先来一次性安装这些依赖包
 
+```
+// npm一次性安装多个依赖模块，模块之间用空格隔开
+npm install --save-dev babel-core babel-loader babel-preset-es2015 babel-preset-react
+```
 
+在`webpack`中配置Babel的方法如下:
 
+```
+module.exports = {
+    entry: __dirname + "/app/main.js",//已多次提及的唯一入口文件
+    output: {
+        path: __dirname + "/public",//打包后的文件存放的地方
+        filename: "bundle.js"//打包后输出文件的文件名
+    },
+    devtool: 'eval-source-map',
+    devServer: {
+        contentBase: "./public",//本地服务器所加载的页面所在的目录
+        historyApiFallback: true,//不跳转
+        inline: true//实时刷新
+    },
+    module: {
+        rules: [
+            {
+                test: /(\.jsx|\.js)$/,
+                use: {
+                    loader: "babel-loader",
+                    options: {
+                        presets: [
+                            "es2015", "react"
+                        ]
+                    }
+                },
+                exclude: /node_modules/
+            }
+        ]
+    }
+};
 
+```
 
+现在你的webpack的配置已经允许你使用ES6以及JSX的语法了。继续用上面的例子进行测试，不过这次我们会使用React，记得先安装 React 和 React-DOM
 
+```
+npm install --save react react-dom
+```
 
+接下来我们使用ES6的语法，更新`Greeter.js`并返回一个React组件
 
+```
+//Greeter,js
+import React, {Component} from 'react'
+import config from './config.json';
 
+class Greeter extends Component{
+  render() {
+    return (
+      <div>
+        {config.greetText}
+      </div>
+    );
+  }
+}
 
+export default Greeter
+```
 
+修改`main.js`如下，使用ES6的模块定义和渲染Greeter模块
 
+```
+import React from 'react';
+import {render} from 'react-dom';
+import Greeter from './Greeter';
 
+render(<Greeter />, document.getElementById('root'));
+
+```
+
+重新使用`npm start`打包，如果之前打开的本地服务器没有关闭，你应该可以在`localhost:8080`下看到与之前一样的内容，这说明`react`和`es6`被正常打包了。
+
+![](/assets/1031000-7d2a7769709a2e36.png)
 
 
 
