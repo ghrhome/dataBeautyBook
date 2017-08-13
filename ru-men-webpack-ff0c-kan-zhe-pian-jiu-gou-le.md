@@ -429,7 +429,6 @@ module.exports = {
         ]
     }
 };
-
 ```
 
 现在你的webpack的配置已经允许你使用ES6以及JSX的语法了。继续用上面的例子进行测试，不过这次我们会使用React，记得先安装 React 和 React-DOM
@@ -466,12 +465,79 @@ import {render} from 'react-dom';
 import Greeter from './Greeter';
 
 render(<Greeter />, document.getElementById('root'));
-
 ```
 
 重新使用`npm start`打包，如果之前打开的本地服务器没有关闭，你应该可以在`localhost:8080`下看到与之前一样的内容，这说明`react`和`es6`被正常打包了。
 
 ![](/assets/1031000-7d2a7769709a2e36.png)
+
+#### Babel的配置
+
+Babel其实可以完全在 `webpack.config.js` 中进行配置，但是考虑到babel具有非常多的配置选项，在单一的`webpack.config.js`文件中进行配置往往使得这个文件显得太复杂，因此一些开发者支持把babel的配置选项放在一个单独的名为 ".babelrc" 的配置文件中。我们现在的babel的配置并不算复杂，不过之后我们会再加一些东西，因此现在我们就提取出相关部分，分两个配置文件进行配置（webpack会自动调用`.babelrc`里的babel配置选项），如下：
+
+```
+// webpack.config.js
+module.exports = {
+  devtool: 'eval-source-map',
+
+  entry:  __dirname + "/app/main.js",
+  output: {
+    path: __dirname + "/public",
+    filename: "bundle.js"
+  },
+
+  module: {
+    loaders: [
+      {
+        test: /\.json$/,
+        loader: "json"
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel'
+      }
+    ]
+  },
+
+  devServer: {...} // Omitted for brevity
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
