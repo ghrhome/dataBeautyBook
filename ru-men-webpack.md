@@ -118,9 +118,94 @@ module.exports = {
 
 > 补充一下，现在已经不允许在配置loaders的loader关键字时省略后面的“-loader”后缀了，所以上面的使用json的loader要从json改为json-loader
 
-```
+### 处理图片和其他静态文件
+
+这个和其他一样，也许你也已经会玩了。安装loader，处理文件。诸如图片，字体等等，不过有个神奇的地方它可以根据你的需求将一些图片自动转成base64编码的，为你减轻很多的网络请求。
+
+安装url-loader
 
 ```
+npm install url-loader --save-dev
+
+```
+
+配置config文件
+
+```
+{
+        test: /\.(png|jpg)$/,
+        loader: 'url?limit=40000'
+      }
+
+```
+
+注意后面那个limit的参数，当你图片大小小于这个限制的时候，会自动启用base64编码图片。
+
+下面举个栗子。
+
+新建一个imgs文件夹，往里面添加一张崔叔的照片。在scss文件中添加如下的东西。
+
+```
+@import "./variables.scss";
+
+h1 {
+  color: $red;
+  background: url('./imgs/avatar.jpg');
+}
+```
+
+pm start, 然后查看图片的url，发现神奇。
+
+## 添加第三方库
+
+有的时候还想来点jquery，moment，undersocre之类的库，webpack可以非常容易的做到这一点，有谣言说Bower即将停止开发了, 作者推荐都使用npm来管理依赖。那么我们现在安装在我们的app中添加jquery和moment的支持。
+
+```
+npm install jquery moment --save-dev
+
+```
+
+在js中引用
+
+```
+var sub = require('./sub');
+var $ = require('jquery');
+var moment = require('moment');
+var app  = document.createElement('div');
+app.innerHTML = '<h1>Hello World it</h1>';
+document.body.appendChild(app);
+app.appendChild(sub());
+$('body').append('<p>look at me! now is ' + moment().format() + '</p>');
+
+
+```
+
+看看浏览器，成功！ jquery和moment现在都起作用了！
+
+### 
+
+  
+
+
+  
+
+
+作者：张轩
+
+  
+
+
+链接：https://zhuanlan.zhihu.com/p/20367175
+
+  
+
+
+来源：知乎
+
+  
+
+
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
 
 
