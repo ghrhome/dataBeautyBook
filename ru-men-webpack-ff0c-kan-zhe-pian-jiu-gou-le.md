@@ -221,11 +221,15 @@ module.exports = {
 
 > **注**：“\_\_dirname”是node.js中的一个全局变量，它指向当前执行脚本所在的目录。
 
-有了这个配置之后，再打包文件，只需在终端里运行
+有了这个配置之后，再打包文件，只需在终端里运行`webpack(非全局安装需使用node_modules/.bin/webpack)`命令就可以了，这条命令会自动引用`webpack.config.js`文件中的配置选项，示例如下：
 
-`webpack(非全局安装需使用node_modules/.bin/webpack)`命令就可以了，这条命令会自动引用`webpack.config.js`文件中的配置选项，示例如下：
+![](/assets/1031000-c02a675d8d8c9e56.png)
 
+又学会了一种使用`Webpack`的方法，这种方法不用管那烦人的命令行参数，有没有感觉很爽。如果我们可以连`webpack(非全局安装需使用node_modules/.bin/webpack)`这条命令都可以不用，那种感觉会不会更爽~，继续看下文。
 
+#### 更快捷的执行打包任务
+
+在命令行中输入命令需要代码类似于`node_modules/.bin/webpack`这样的路径其实是比较烦人的，不过值得庆幸的是`npm`可以引导任务执行，对`npm`进行配置后可以在命令行中使用简单的`npm start`命令来替代上面略微繁琐的命令。在`package.json`中对`scripts`对象进行相关设置即可，设置方法如下。
 
 
 
