@@ -219,17 +219,11 @@ module.exports = {
 }
 ```
 
+> **注**：“\_\_dirname”是node.js中的一个全局变量，它指向当前执行脚本所在的目录。
 
+有了这个配置之后，再打包文件，只需在终端里运行
 
-
-
-
-
-
-
-
-
-
+`webpack(非全局安装需使用node_modules/.bin/webpack)`命令就可以了，这条命令会自动引用`webpack.config.js`文件中的配置选项，示例如下：
 
 
 
