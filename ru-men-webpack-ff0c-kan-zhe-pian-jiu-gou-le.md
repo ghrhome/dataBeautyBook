@@ -169,13 +169,13 @@ module.exports = function() {
 };
 ```
 
+`main.js`文件中我们写入下述代码，用以把`Greeter模块`返回的节点插入页面。
 
-
-
-
-
-
-
+```
+//main.js 
+const greeter = require('./Greeter.js');
+document.querySelector("#root").appendChild(greeter());
+```
 
 
 
