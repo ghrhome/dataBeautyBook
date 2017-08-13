@@ -517,7 +517,6 @@ module.exports = {
 
 Webpack有一个不可不说的优点，它把所有的文件都都当做模块处理，JavaScript代码，CSS和fonts以及图片等等通过合适的loader都可以被处理。
 
-  
 CSS
 
 webpack提供两个工具处理样式表，`css-loader` 和 `style-loader`，二者处理的任务不同，`css-loader`使你能够使用类似`@import` 和 `url(...)`的方法实现 `require()`的功能,`style-loader`将所有的计算后的样式加入页面中，二者组合在一起使你能够把样式表嵌入webpack打包后的JS文件中。
@@ -556,8 +555,78 @@ module.exports = {
         ]
     }
 };
+```
+
+> 请注意这里对同一个文件引入多个loader的方法。
+
+接下来，在app文件夹里创建一个名字为"main.css"的文件，对一些元素设置样式
 
 ```
+/* main.css */
+html {
+  box-sizing: border-box;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, p, ul {
+  margin: 0;
+  padding: 0;
+}
+```
+
+我们这里例子中用到的`webpack`只有单一的入口，其它的模块需要通过`import`,`require`,`url`等与入口文件建立其关联，为了让webpack能找到”main.css“文件，我们把它导入”main.js “中，如下
+
+```
+//main.js
+import React from 'react';
+import {render} from 'react-dom';
+import Greeter from './Greeter';
+
+import './main.css';//使用require导入css文件
+
+render(<Greeter />, document.getElementById('root'));
+
+```
+
+> 通常情况下，css会和js打包到同一个文件中，并不会打包为一个单独的css文件，不过通过合适的配置webpack也可以把css打包为单独的文件的。
+
+上面的代码说明webpack是怎么把css当做模块看待的，咱们继续看一个更加真实的css模块实践。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
