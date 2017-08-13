@@ -188,11 +188,14 @@ webpack可以在终端中使用，在基本的使用方法如下：
 webpack {entry file} {destination for bundled file}
 ```
 
+指定入口文件后，webpack将自动识别项目所依赖的其它文件，不过需要注意的是如果你的webpack不是全局安装的，那么当你在终端中使用此命令时，需要额外指定其在node\_modules中的地址，继续上面的例子，在终端中输入如下命令
 
+```
+# webpack非全局安装的情况
+node_modules/.bin/webpack app/main.js public/bundle.js
+```
 
-
-
-
+结果如下![](/assets/1031000-b9e69a58e3518ba7.png)可以看出`webpack`同时编译了`main.js`和`Greeter,js`,现在打开`index.html`,可以看到如下结果
 
 
 
