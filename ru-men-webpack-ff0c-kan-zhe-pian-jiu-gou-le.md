@@ -83,13 +83,10 @@ Grunt和Gulp的工作方式是：在一个配置文件中，指明对某些文�
 
 ![](/assets/1031000-d0693c06bb3a00e3.png)
 
-
-
 Grunt和Gulp的工作流程
 
 Webpack的工作方式是：把你的项目当做一个整体，通过一个给定的主文件（如：index.js），Webpack将从这个文件开始找到你的项目的所有依赖文件，使用loaders处理它们，最后打包为一个（或多个）浏览器可识别的JavaScript文件。
 
-  
 ![](/assets/1031000-160bc667d3b6093a.png)
 
 Webpack工作方式
@@ -103,4 +100,63 @@ Webpack工作方式
 #### 安装
 
 Webpack可以使用npm安装，新建一个空的练习文件夹（此处命名为webpack sample project），在终端中转到该文件夹后执行下述指令就可以完成安装。
+
+```
+//全局安装
+npm install -g webpack
+//安装到你的项目目录
+npm install --save-dev webpack
+```
+
+#### 正式使用Webpack前的准备
+
+1. 在上述练习文件夹中创建一个package.json文件，这是一个标准的npm说明文件，里面蕴含了丰富的信息，包括当前项目的依赖模块，自定义的脚本任务等等。在终端中使用
+   `npm init`
+   命令可以自动创建这个package.json文件
+
+```
+npm init
+```
+
+输入这个命令后，终端会问你一系列诸如项目名称，项目描述，作者等信息，不过不用担心，如果你不准备在npm中发布你的模块，这些问题的答案都不重要，回车默认即可。
+
+1. package.json文件已经就绪，我们在本项目中安装Webpack作为依赖包
+
+```
+// 安装Webpack
+npm install --save-dev webpack
+```
+
+回到之前的空文件夹，并在里面创建两个文件夹,app文件夹和public文件夹，app文件夹用来存放原始数据和我们将写的JavaScript模块，public文件夹用来存放之后供浏览器读取的文件（包括使用webpack打包生成的js文件以及一个
+
+* `index.html`
+   --放在public文件夹中;
+* `Greeter.js`
+  -- 放在app文件夹中;
+* `main.js`
+  -- 放在app文件夹中;
+
+此时项目结构如下图所示
+
+![](/assets/1031000-976ba1a06fd0702f.png)
+
+我们在**index.html**文件中写入最基础的html代码，它在这里目的在于引入打包后的js文件（这里我们先把之后打包后的js文件命名为`bundle.js`，之后我们还会详细讲述）。
+
+```
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Webpack Sample Project</title>
+  </head>
+  <body>
+    <div id='root'>
+    </div>
+    <script src="bundle.js"></script>
+  </body>
+</html>
+```
+
+
 
