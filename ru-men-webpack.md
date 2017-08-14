@@ -126,7 +126,6 @@ module.exports = {
 
 ```
 npm install url-loader --save-dev
-
 ```
 
 配置config文件
@@ -136,7 +135,6 @@ npm install url-loader --save-dev
         test: /\.(png|jpg)$/,
         loader: 'url?limit=40000'
       }
-
 ```
 
 注意后面那个limit的参数，当你图片大小小于这个限制的时候，会自动启用base64编码图片。
@@ -162,7 +160,6 @@ pm start, 然后查看图片的url，发现神奇。
 
 ```
 npm install jquery moment --save-dev
-
 ```
 
 在js中引用
@@ -176,36 +173,11 @@ app.innerHTML = '<h1>Hello World it</h1>';
 document.body.appendChild(app);
 app.appendChild(sub());
 $('body').append('<p>look at me! now is ' + moment().format() + '</p>');
-
-
 ```
 
 看看浏览器，成功！ jquery和moment现在都起作用了！
 
-### 
 
-  
-
-
-  
-
-
-作者：张轩
-
-  
-
-
-链接：https://zhuanlan.zhihu.com/p/20367175
-
-  
-
-
-来源：知乎
-
-  
-
-
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
 
 
