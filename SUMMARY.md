@@ -40,4 +40,5 @@
 * [入门webpack补遗](ru-men-webpack-bu-yi.md)
 * [AngularJS 异常处理](angularjs-yi-chang-chu-li.md)
 * [AngularJS实例 – 装饰$log](angularjsshi-li-zhuang-997024-log.md)
+* [axios基本用法](axiosji-ben-yong-fa.md)
 
