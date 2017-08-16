@@ -38,4 +38,6 @@
 * [入门Webpack，看这篇就够了](ru-men-webpack-ff0c-kan-zhe-pian-jiu-gou-le.md)
 * [入门Webpack](ru-men-webpack.md)
 * [入门webpack补遗](ru-men-webpack-bu-yi.md)
+* [AngularJS 异常处理](angularjs-yi-chang-chu-li.md)
+* [AngularJS实例 – 装饰$log](angularjsshi-li-zhuang-997024-log.md)
 
