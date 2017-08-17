@@ -515,7 +515,6 @@ webpack(webpackConfig, function (err, stats) {
     '  Opening index.html over file:// won\'t work.\n'
   ))
 })
-
 ```
 
 ## build/webpack.prod.conf.js {#buildwebpackprodconfjs}
@@ -786,11 +785,23 @@ config文件夹下最主要的文件就是index.js了，在这里面描述了开
 
 这三个文件就简单设置了环境变量而已，没什么特别的。
 
+
+
+5.dev-client.js（配合dev-server.js监听html文件改动也能够触发自动刷新）
+
+```
+// 引入 webpack-hot-middleware/client 
+var hotClient = require('webpack-hot-middleware/client');
+
+// 订阅事件，当 event.action === 'reload' 时执行页面刷新
+hotClient.subscribe(function (event) {
+    if (event.action === 'reload') {
+        window.location.reload();
+    }
+})
+```
+
 # 五、总结 {#五总结}
 
 到这里对模板项目的build和config文件夹下面的内容已经基本了解，知道了在实际使用中根据自己的需求修改哪里的配置，例如，当我有需要配置代理的时候要在config/index.js里面的dev.proxyTable设置，当我修改了资源文件夹名称static同样需要在config/index.js里面设置。总体感觉入门了webpack，但不算真正理解。webpack的插件好多，在看代码的过程中遇到不认识的插件都是要去查看很多文档（github，npm或者博客），感觉实际过程中更改插件配置或者使用新插件也是需要费点心思钻文档和网上其他博客介绍
-
-
-
-
 
