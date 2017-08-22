@@ -42,4 +42,5 @@
 * [AngularJS实例 – 装饰$log](angularjsshi-li-zhuang-997024-log.md)
 * [axios基本用法](axiosji-ben-yong-fa.md)
 * [对vue中 默认的 config/index.js:配置的详细理解 -【以及webpack配置的理解】](dui-vue-zhong-mo-ren-de-config-index-js-pei-zhi-de-xiang-xi-li-jie-3010-yi-ji-webpack-pei-zhi-de-li-jie-3011.md)
+* [微信调用照相拍照等 js 接口的权限配置 和 照片上传和下载实现](wei-xin-diao-yong-zhao-xiang-pai-zhao-deng-js-jie-kou-de-quan-xian-pei-zhi-he-zhao-pian-shang-chuan-he-xia-zai-shi-xian.md)
 
