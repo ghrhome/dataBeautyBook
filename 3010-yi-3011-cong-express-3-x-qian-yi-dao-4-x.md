@@ -4,8 +4,6 @@ Express 3.x 到 4.0 的迁移指南。你可能对这篇文章也有兴趣[4.x�
 
 更多的例子和完整的API文档，请参见[Express 4.x 的文档](http://expressjs.com/4x/api.html)。
 
-
-
 # 概述 {#articleHeader0}
 
 Express 4 不再依赖 Connect 。这意味着所有捆绑的中间件（除了`static`）都不再能从`express`模块中被调用。这些中间件都可以作为下面提及的模块进行调用。这一变化是为了让这些中间件在获取修复，更新和发布的同时不影响 express 的发布周期，反之亦然。
@@ -28,32 +26,14 @@ Express 4 不再依赖 Connect 。这意味着所有捆绑的中间件（除了`
 这种方法不再可用。如果你想配置基于环境的不同路由，使用 if 语句或替代模块。
 
 ```
-app.configure(
-'development'
-, 
-function
-()
-{
-   
-// configure stuff here
-
+app.configure('development', function() {
+   // configure stuff here
 });
-
 // 现在改为
-var
- env = process.env.NODE_ENV || 
-'development'
-;
-
-if
- (
-'development'
- == env) {
-   
-// configure stuff here
-
+var env = process.env.NODE_ENV || 'development';
+if ('development' == env) {
+   // configure stuff here
 }
-
 ```
 
 ## app.router {#articleHeader3}
@@ -63,92 +43,34 @@ if
 如果你的代码看起来像这样：
 
 ```
-app
-.
-use
-(cookieParser());
-
-app
-.
-use
-(bodyParser());
-
+app.use(cookieParser());
+app.use(bodyParser());
 /// 其他的中间件，并没有影响
-app
-.
-use
-(
-app
-.router); 
-// 
-<
---- 这行会被移除
+app.use(app.router); // <--- 这行会被移除
+
 // 更多的中间件（在路由之后执行）
-app
-.
-use
-(function(req, res, next);
-
+app.use(function(req, res, next);
 // 处理错误的中间件
-app
-.
-use
-(function(
-err
-, req, res, next) {});
+app.use(function(err, req, res, next) {});
 
-
-app
-.
-get
-('/' ...);
-
-app
-.
-post
-(...);
-
+app.get('/' ...);
+app.post(...);
 ```
 
 `app.router`已被移除，中间件和路由按照它们添加的顺序被执行。在你的代码中，你应该将原本在`app.use(app.router)`之后的向`app.use`的请求移动到其他路由之后（HTTP动作）。
 
 ```
-app
-.
-use
-(cookieParser());
-
-app
-.
-use
-(bodyParser());
-
+app.use(cookieParser());
+app.use(bodyParser());
 /// 其他的中间件，并没有影响
-app
-.
-get
-('/' ...);
 
-app
-.
-post
-(...);
-
+app.get('/' ...);
+app.post(...);
 
 // 更多的中间件（在路由后执行）
-app
-.
-use
-(function(req, res, next);
-
+app.use(function(req, res, next);
 // 处理错误的中间件
-app
-.
-use
-(function(
-err
-, req, res, next) {});
-
+app.use(function(err, req, res, next) {});
 ```
 
 ## express.createServer\(\) {#articleHeader4}
@@ -168,9 +90,9 @@ Connect 对 node 的原型进行了全局的改动。
 * `res.on('header')`
 * `res.charset`
 * `res.headerSent`
-  - use node's
-  `res.headersSent`
-  instead
+  * use node's
+    `res.headersSent`
+    instead
 
 你不应该在任何 Connect 或 Express 的库中再使用这些。
 
@@ -187,19 +109,9 @@ Connect 对 node 的原型进行了全局的改动。
 `app.use`现在可以接受`:params`.
 
 ```
-app.
-use
-(
-'/users/:user_id'
-, 
-function
-(req, res, next)
-{
-  
-// req.params.user_id 可以正确获取
-
+app.use('/users/:user_id', function(req, res, next) {
+  // req.params.user_id 可以正确获取
 });
-
 ```
 
 ## req.accepted\(\) {#articleHeader10}
@@ -244,7 +156,6 @@ function
 
 改为`headersSent`来匹配 node.js 的 ServerResponse 对象。你的应用可能并没有使用到这个，因此它不会是一个问题。
 
-  
 req.is
 
 现在在内部使用[type-is](https://github.com/expressjs/type-is)。  
@@ -263,6 +174,4 @@ req.is
 Router 已经全面改版，现在它是一个功能完善的中间件路由。Router 是在不牺牲参数匹配和中间件的情况下，将你的路由分离到多个文件或者模块的好方法。请参阅 Routes 及
 
 [路由文档](http://expressjs.com/4x/api.html#router)
-
-
 
