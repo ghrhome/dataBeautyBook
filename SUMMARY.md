@@ -44,4 +44,5 @@
 * [对vue中 默认的 config/index.js:配置的详细理解 -【以及webpack配置的理解】](dui-vue-zhong-mo-ren-de-config-index-js-pei-zhi-de-xiang-xi-li-jie-3010-yi-ji-webpack-pei-zhi-de-li-jie-3011.md)
 * [微信调用照相拍照等 js 接口的权限配置 和 照片上传和下载实现](wei-xin-diao-yong-zhao-xiang-pai-zhao-deng-js-jie-kou-de-quan-xian-pei-zhi-he-zhao-pian-shang-chuan-he-xia-zai-shi-xian.md)
 * [JQuery UI Datepicker中文显示的方法](jquery-ui-datepickerzhong-wen-xian-shi-de-fang-fa.md)
+* [【译】从 Express 3.x 迁移到 4.x](3010-yi-3011-cong-express-3-x-qian-yi-dao-4-x.md)
 
