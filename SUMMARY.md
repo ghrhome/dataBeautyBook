@@ -47,4 +47,5 @@
 * [【译】从 Express 3.x 迁移到 4.x](3010-yi-3011-cong-express-3-x-qian-yi-dao-4-x.md)
 * [Express中的app.use与app.get的区别](expresszhong-de-app-use-yu-app-get-de-qu-bie.md)
 * [Node.js开发框架Express4.x](nodejskai-fa-kuang-jia-express4-x.md)
+* [node.js express 4.x Router学习心得](nodejs-express-4x-routerxue-xi-xin-de.md)
 
