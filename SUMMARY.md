@@ -49,4 +49,5 @@
 * [Node.js开发框架Express4.x](nodejskai-fa-kuang-jia-express4-x.md)
 * [node.js express 4.x Router学习心得](nodejs-express-4x-routerxue-xi-xin-de.md)
 * [腹肌训练：12个训练核心区域的动作](fu-ji-xun-lian-ff1a-12-ge-xun-lian-he-xin-qu-yu-de-dong-zuo.md)
+* [腹肌训练:12个核心区域动作2](fu-ji-xun-7ec33a-12-ge-he-xin-qu-yu-dong-zuo-2.md)
 
