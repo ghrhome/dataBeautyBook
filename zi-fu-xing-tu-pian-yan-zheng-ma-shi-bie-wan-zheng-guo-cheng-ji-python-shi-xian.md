@@ -1,10 +1,8 @@
 # 字符型图片验证码识别完整过程及Python实现
 
-# 1   摘要
+# 1   摘要
 
-验证码是目前互联网上非常常见也是非常重要的一个事物，充当着很多系统的 **防火墙** 功能，但是随时OCR技术的发展，验证码暴露出来的安全问题也越来越严峻。本文介绍了一套字符验证码识别的完整流程，对于验证码安全和OCR识别技术都有一定的借鉴意义。
-
-
+验证码是目前互联网上非常常见也是非常重要的一个事物，充当着很多系统的 **防火墙** 功能，但是随时OCR技术的发展，验证码暴露出来的安全问题也越来越严峻。本文介绍了一套字符验证码识别的完整流程，对于验证码安全和OCR识别技术都有一定的借鉴意义。
 
 文章更新：2017-09-20
 
@@ -22,52 +20,50 @@ https://github.com/zhengwh/captcha-svm
 
 文章介绍：[http://www.cnblogs.com/beer/p/7392397.html](http://www.cnblogs.com/beer/p/7392397.html)
 
-
-
-# 2   关键词
+# 2   关键词
 
 关键词：安全,字符图片,验证码识别,OCR,Python,SVM,PIL
 
-# 3   免责声明
+# 3   免责声明
 
-本文研究所用素材来自于某旧Web框架的网站 **完全对外公开** 的公共图片资源。
+本文研究所用素材来自于某旧Web框架的网站 **完全对外公开** 的公共图片资源。
 
-本文只做了该网站对外公开的公共图片资源进行了爬取， **并未越权** 做任何多余操作。
+本文只做了该网站对外公开的公共图片资源进行了爬取， **并未越权** 做任何多余操作。
 
-本文在书写相关报告的时候已经 **隐去** 漏洞网站的身份信息。
+本文在书写相关报告的时候已经 **隐去** 漏洞网站的身份信息。
 
-本文作者 **已经通知** 网站相关人员此系统漏洞，并积极向新系统转移。
+本文作者 **已经通知** 网站相关人员此系统漏洞，并积极向新系统转移。
 
-本报告的主要目的也仅是用于 **OCR交流学习** 和引起大家对 **验证安全的警觉** 。
+本报告的主要目的也仅是用于 **OCR交流学习** 和引起大家对 **验证安全的警觉** 。
 
-# 4   引言
+# 4   引言
 
 关于验证码的非技术部分的介绍，可以参考以前写的一篇科普类的文章：
 
 [互联网安全防火墙（1）--网络验证码的科普](http://www.cnblogs.com/beer/p/4996833.html)
 
-> http://www.cnblogs.com/beer/p/4996833.html
+> [http://www.cnblogs.com/beer/p/4996833.html](http://www.cnblogs.com/beer/p/4996833.html)
 
-里面对验证码的种类，使用场景，作用，主要的识别技术等等进行了讲解，然而并没有涉及到任何技术内容。本章内容则作为它的 **技术补充** 来给出相应的识别的解决方案，让读者对验证码的功能及安全性问题有更深刻的认识。
+里面对验证码的种类，使用场景，作用，主要的识别技术等等进行了讲解，然而并没有涉及到任何技术内容。本章内容则作为它的 **技术补充** 来给出相应的识别的解决方案，让读者对验证码的功能及安全性问题有更深刻的认识。
 
-# 5   基本工具
+# 5   基本工具
 
 要达到本文的目的，只需要简单的编程知识即可，因为现在的机器学习领域的蓬勃发展，已经有很多封装好的开源解决方案来进行机器学习。普通程序员已经不需要了解复杂的数学原理，即可以实现对这些工具的应用了。
 
 主要开发环境：
 
-* python3.5
+* python3.5  
   python SDK版本
 
-* PIL
+* PIL  
   图片处理库
 
-* libsvm
+* libsvm  
   开源的svm机器学习库
 
 关于环境的安装，不是本文的重点，故略去。
 
-# 6   基本流程
+# 6   基本流程
 
 一般情况下，对于字符型验证码的识别流程如下：
 
@@ -82,11 +78,11 @@ https://github.com/zhengwh/captcha-svm
 9. 使用识别模型预测新的未知图片集
 10. 达到根据“图片”就能返回识别正确的字符集的目标
 
-# 7   素材准备
+# 7   素材准备
 
-## 7.1   素材选择
+## 7.1   素材选择
 
-由于本文是以初级的学习研究目的为主，要求 **“有代表性，但又不会太难”** ，所以就直接在网上找个比较有代表性的简单的字符型验证码（感觉像在找漏洞一样）。
+由于本文是以初级的学习研究目的为主，要求 **“有代表性，但又不会太难”** ，所以就直接在网上找个比较有代表性的简单的字符型验证码（感觉像在找漏洞一样）。
 
 最后在一个比较旧的网站（估计是几十年前的网站框架）找到了这个验证码图片。
 
@@ -100,7 +96,7 @@ https://github.com/zhengwh/captcha-svm
 
 此图片能满足要求，仔细观察其具有如下特点。
 
-**有利识别的特点** ：
+**有利识别的特点** ：
 
 1. 由纯阿拉伯数字组成
 2. 字数为4位
@@ -109,13 +105,13 @@ https://github.com/zhengwh/captcha-svm
 
 以上就是本文所说的此验证码简单的重要原因，后续代码实现中会用到
 
-**不利识别的特点** ：
+**不利识别的特点** ：
 
 1. 图片背景有干扰噪点
 
 这虽然是不利特点，但是这个干扰门槛太低，只需要简单的方法就可以除去
 
-## 7.2   素材获取
+## 7.2   素材获取
 
 由于在做训练的时候，需要大量的素材，所以不可能用手工的方式一张张在浏览器中保存，故建议写个自动化下载的程序。
 
@@ -132,46 +128,14 @@ https://github.com/zhengwh/captcha-svm
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
 ```
-def
- downloads_pic(**
-kwargs):
-    pic_name 
-= kwargs.get(
-'
-pic_name
-'
-, None)
+def downloads_pic(**kwargs):
+    pic_name = kwargs.get('pic_name', None)
 
-    url 
-= 
-'
-http://xxxx/rand_code_captcha/
-'
-
-    res 
-= requests.get(url, stream=
-True)
-    with open(pic_path 
-+ pic_name+
-'
-.bmp
-'
-, 
-'
-wb
-'
-) as f:
-        
-for
- chunk 
-in
- res.iter_content(chunk_size=1024
-):
-            
-if
- chunk:  
-#
- filter out keep-alive new chunks
+    url = 'http://xxxx/rand_code_captcha/'
+    res = requests.get(url, stream=True)
+    with open(pic_path + pic_name+'.bmp', 'wb') as f:
+        for chunk in res.iter_content(chunk_size=1024):
+            if chunk:  # filter out keep-alive new chunks
                 f.write(chunk)
                 f.flush()
         f.close()
@@ -185,7 +149,7 @@ if
 
 ![](http://images2015.cnblogs.com/blog/111649/201607/111649-20160715101439873-347298618.png)
 
-# 8   图片预处理
+# 8   图片预处理
 
 虽然目前的机器学习算法已经相当先进了，但是为了减少后面训练时的复杂度，同时增加识别率，很有必要对图片进行预处理，使其对机器识别更友好。
 
@@ -195,7 +159,7 @@ if
 2. 将彩色图片二值化为黑白图片
 3. 去除背景噪点
 
-## 8.1   二值化图片
+## 8.1   二值化图片
 
 主要步骤如下：
 
@@ -203,33 +167,31 @@ if
 2. 将灰度图按照设定阈值转化为二值图
 
 ```
-image =
- Image.open(img_path)
-imgry 
-= image.convert(
-'
-L
-'
-)  
-#
- 转化为灰度图
+image = Image.open(img_path)
+imgry = image.convert('L')  # 转化为灰度图
 
-table 
-=
- get_bin_table()
-out 
-= imgry.point(table, 
-'
-1
-'
-)
+table = get_bin_table()
+out = imgry.point(table, '1')
 ```
 
 上面引用到的二值函数的定义如下：
 
-| 1234567891011121314 | `defget_bin_table(threshold=140):"""获取灰度转二值的映射table:param threshold::return:"""table=[]foriinrange(256):ifi < threshold:table.append(0)else:table.append(1)returntable` |
-| :--- | :--- |
-
+```
+def get_bin_table(threshold=140):
+    """
+    获取灰度转二值的映射table
+    :param threshold:
+    :return:
+    """
+    table = []
+    for i in range(256):
+        if i < threshold:
+            table.append(0)
+        else:
+            table.append(1)
+ 
+    return table
+```
 
 由PIL转化后变成二值图片:0表示黑色,1表示白色。二值化后带噪点的 **6937** 的像素点输出后如下图：
 
@@ -250,19 +212,19 @@ out
 
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
-如果你是近视眼，然后离屏幕远一点，可以隐约看到 **6937** 的骨架了。
+如果你是近视眼，然后离屏幕远一点，可以隐约看到 **6937** 的骨架了。
 
-## 8.2   去除噪点
+## 8.2   去除噪点
 
-在转化为二值图片后，就需要清除噪点。本文选择的素材比较简单，大部分噪点也是最简单的那种 **孤立点**，所以可以通过检测这些孤立点就能移除大量的噪点。
+在转化为二值图片后，就需要清除噪点。本文选择的素材比较简单，大部分噪点也是最简单的那种 **孤立点**，所以可以通过检测这些孤立点就能移除大量的噪点。
 
-关于如何去除更复杂的噪点甚至干扰线和色块，有比较成熟的算法: **洪水填充法 Flood Fill** ，后面有兴趣的时间可以继续研究一下。
+关于如何去除更复杂的噪点甚至干扰线和色块，有比较成熟的算法: **洪水填充法 Flood Fill** ，后面有兴趣的时间可以继续研究一下。
 
-本文为了问题简单化，干脆就用一种简单的自己想的 **简单办法** 来解决掉这个问题：
+本文为了问题简单化，干脆就用一种简单的自己想的 **简单办法** 来解决掉这个问题：
 
-* 对某个 
+* 对某个 
   **黑点**
-   周边的九宫格里面的黑色点计数
+   周边的九宫格里面的黑色点计数
 * 如果黑色点少于2个则证明此点为孤立点，然后得到所有的孤立点
 * 对所有孤立点一次批量移除。
 
@@ -279,9 +241,6 @@ out
 ![](http://images2015.cnblogs.com/blog/111649/201607/111649-20160715101529561-1953823859.png)
 
 其中：
-
-  
-
 
 * A类点计算周边相邻的3个点（如上图红框所示）
 * B类点计算周边相邻的5个点（如上图红框所示）
@@ -300,308 +259,119 @@ out
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
 ```
-def
- sum_9_region(img, x, y):
-    
-"""
-
+def sum_9_region(img, x, y):
+    """
     9邻域框,以当前点为中心的田字框,黑点个数
     :param x:
     :param y:
     :return:
-    
-"""
-#
- todo 判断图片的长宽度下限
+    """
+    # todo 判断图片的长宽度下限
+    cur_pixel = img.getpixel((x, y))  # 当前像素点的值
+    width = img.width
+    height = img.height
 
-    cur_pixel = img.getpixel((x, y))  
-#
- 当前像素点的值
+    if cur_pixel == 1:  # 如果当前点为白色区域,则不统计邻域值
+        return 0
 
-    width =
- img.width
-    height 
-=
- img.height
+    if y == 0:  # 第一行
+        if x == 0:  # 左上顶点,4邻域
+            # 中心点旁边3个点
+            sum = cur_pixel \
+                  + img.getpixel((x, y + 1)) \
+                  + img.getpixel((x + 1, y)) \
+                  + img.getpixel((x + 1, y + 1))
+            return 4 - sum
+        elif x == width - 1:  # 右上顶点
+            sum = cur_pixel \
+                  + img.getpixel((x, y + 1)) \
+                  + img.getpixel((x - 1, y)) \
+                  + img.getpixel((x - 1, y + 1))
 
-    
-if
- cur_pixel == 1:  
-#
- 如果当前点为白色区域,则不统计邻域值
-return
- 0
+            return 4 - sum
+        else:  # 最上非顶点,6邻域
+            sum = img.getpixel((x - 1, y)) \
+                  + img.getpixel((x - 1, y + 1)) \
+                  + cur_pixel \
+                  + img.getpixel((x, y + 1)) \
+                  + img.getpixel((x + 1, y)) \
+                  + img.getpixel((x + 1, y + 1))
+            return 6 - sum
+    elif y == height - 1:  # 最下面一行
+        if x == 0:  # 左下顶点
+            # 中心点旁边3个点
+            sum = cur_pixel \
+                  + img.getpixel((x + 1, y)) \
+                  + img.getpixel((x + 1, y - 1)) \
+                  + img.getpixel((x, y - 1))
+            return 4 - sum
+        elif x == width - 1:  # 右下顶点
+            sum = cur_pixel \
+                  + img.getpixel((x, y - 1)) \
+                  + img.getpixel((x - 1, y)) \
+                  + img.getpixel((x - 1, y - 1))
 
-    
-if
- y == 0:  
-#
- 第一行
-if
- x == 0:  
-#
- 左上顶点,4邻域
-#
- 中心点旁边3个点
+            return 4 - sum
+        else:  # 最下非顶点,6邻域
+            sum = cur_pixel \
+                  + img.getpixel((x - 1, y)) \
+                  + img.getpixel((x + 1, y)) \
+                  + img.getpixel((x, y - 1)) \
+                  + img.getpixel((x - 1, y - 1)) \
+                  + img.getpixel((x + 1, y - 1))
+            return 6 - sum
+    else:  # y不在边界
+        if x == 0:  # 左边非顶点
+            sum = img.getpixel((x, y - 1)) \
+                  + cur_pixel \
+                  + img.getpixel((x, y + 1)) \
+                  + img.getpixel((x + 1, y - 1)) \
+                  + img.getpixel((x + 1, y)) \
+                  + img.getpixel((x + 1, y + 1))
 
-            sum =
- cur_pixel \
-                  
-+ img.getpixel((x, y + 1
-)) \
-                  
-+ img.getpixel((x + 1
-, y)) \
-                  
-+ img.getpixel((x + 1, y + 1
-))
-            
-return
- 4 -
- sum
-        
-elif
- x == width - 1:  
-#
- 右上顶点
+            return 6 - sum
+        elif x == width - 1:  # 右边非顶点
+            # print('%s,%s' % (x, y))
+            sum = img.getpixel((x, y - 1)) \
+                  + cur_pixel \
+                  + img.getpixel((x, y + 1)) \
+                  + img.getpixel((x - 1, y - 1)) \
+                  + img.getpixel((x - 1, y)) \
+                  + img.getpixel((x - 1, y + 1))
 
-            sum =
- cur_pixel \
-                  
-+ img.getpixel((x, y + 1
-)) \
-                  
-+ img.getpixel((x - 1
-, y)) \
-                  
-+ img.getpixel((x - 1, y + 1
-))
-
-            
-return
- 4 -
- sum
-        
-else
-:  
-#
- 最上非顶点,6邻域
-
-            sum = img.getpixel((x - 1
-, y)) \
-                  
-+ img.getpixel((x - 1, y + 1
-)) \
-                  
-+
- cur_pixel \
-                  
-+ img.getpixel((x, y + 1
-)) \
-                  
-+ img.getpixel((x + 1
-, y)) \
-                  
-+ img.getpixel((x + 1, y + 1
-))
-            
-return
- 6 -
- sum
-    
-elif
- y == height - 1:  
-#
- 最下面一行
-if
- x == 0:  
-#
- 左下顶点
-#
- 中心点旁边3个点
-
-            sum =
- cur_pixel \
-                  
-+ img.getpixel((x + 1
-, y)) \
-                  
-+ img.getpixel((x + 1, y - 1
-)) \
-                  
-+ img.getpixel((x, y - 1
-))
-            
-return
- 4 -
- sum
-        
-elif
- x == width - 1:  
-#
- 右下顶点
-
-            sum =
- cur_pixel \
-                  
-+ img.getpixel((x, y - 1
-)) \
-                  
-+ img.getpixel((x - 1
-, y)) \
-                  
-+ img.getpixel((x - 1, y - 1
-))
-
-            
-return
- 4 -
- sum
-        
-else
-:  
-#
- 最下非顶点,6邻域
-
-            sum =
- cur_pixel \
-                  
-+ img.getpixel((x - 1
-, y)) \
-                  
-+ img.getpixel((x + 1
-, y)) \
-                  
-+ img.getpixel((x, y - 1
-)) \
-                  
-+ img.getpixel((x - 1, y - 1
-)) \
-                  
-+ img.getpixel((x + 1, y - 1
-))
-            
-return
- 6 -
- sum
-    
-else
-:  
-#
- y不在边界
-if
- x == 0:  
-#
- 左边非顶点
-
-            sum = img.getpixel((x, y - 1
-)) \
-                  
-+
- cur_pixel \
-                  
-+ img.getpixel((x, y + 1
-)) \
-                  
-+ img.getpixel((x + 1, y - 1
-)) \
-                  
-+ img.getpixel((x + 1
-, y)) \
-                  
-+ img.getpixel((x + 1, y + 1
-))
-
-            
-return
- 6 -
- sum
-        
-elif
- x == width - 1:  
-#
- 右边非顶点
-#
- print('%s,%s' % (x, y))
-
-            sum = img.getpixel((x, y - 1
-)) \
-                  
-+
- cur_pixel \
-                  
-+ img.getpixel((x, y + 1
-)) \
-                  
-+ img.getpixel((x - 1, y - 1
-)) \
-                  
-+ img.getpixel((x - 1
-, y)) \
-                  
-+ img.getpixel((x - 1, y + 1
-))
-
-            
-return
- 6 -
- sum
-        
-else
-:  
-#
- 具备9领域条件的
-
-            sum = img.getpixel((x - 1, y - 1
-)) \
-                  
-+ img.getpixel((x - 1
-, y)) \
-                  
-+ img.getpixel((x - 1, y + 1
-)) \
-                  
-+ img.getpixel((x, y - 1
-)) \
-                  
-+
- cur_pixel \
-                  
-+ img.getpixel((x, y + 1
-)) \
-                  
-+ img.getpixel((x + 1, y - 1
-)) \
-                  
-+ img.getpixel((x + 1
-, y)) \
-                  
-+ img.getpixel((x + 1, y + 1
-))
-            
-return
- 9 - sum
+            return 6 - sum
+        else:  # 具备9领域条件的
+            sum = img.getpixel((x - 1, y - 1)) \
+                  + img.getpixel((x - 1, y)) \
+                  + img.getpixel((x - 1, y + 1)) \
+                  + img.getpixel((x, y - 1)) \
+                  + cur_pixel \
+                  + img.getpixel((x, y + 1)) \
+                  + img.getpixel((x + 1, y - 1)) \
+                  + img.getpixel((x + 1, y)) \
+                  + img.getpixel((x + 1, y + 1))
+            return 9 - sum
 ```
 
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
 Tips:这个地方是相当考验人的细心和耐心程度了，这个地方的工作量还是蛮大的，花了半个晚上的时间才完成的。
 
-计算好每个像素点的周边像素黑点（注意：PIL转化的图片黑点的值为0）个数后，只需要筛选出个数为 **1或者2** 的点的坐标即为 **孤立点** 。这个判断方法可能不太准确，但是基本上能够满足本文的需求了。
+计算好每个像素点的周边像素黑点（注意：PIL转化的图片黑点的值为0）个数后，只需要筛选出个数为 **1或者2** 的点的坐标即为 **孤立点** 。这个判断方法可能不太准确，但是基本上能够满足本文的需求了。
 
 经过预处理后的图片如下所示:
 
 ![](http://images2015.cnblogs.com/blog/111649/201607/111649-20160715101725529-1326842831.png)
 
-对比文章开头的原始图片，那些 **孤立点** 都被移除掉，相对比较 **干净** 的验证码图片已经生成。
+对比文章开头的原始图片，那些 **孤立点** 都被移除掉，相对比较 **干净** 的验证码图片已经生成。
 
-# 9   图片字符切割
+# 9   图片字符切割
 
-由于字符型 **验证码图片** 本质就可以看着是由一系列的 **单个字符图片** 拼接而成，为了简化研究对象，我们也可以将这些图片分解到 **原子级** ，即： **只包含单个字符的图片**。
+由于字符型 **验证码图片** 本质就可以看着是由一系列的 **单个字符图片** 拼接而成，为了简化研究对象，我们也可以将这些图片分解到 **原子级** ，即： **只包含单个字符的图片**。
 
-于是，我们的研究对象由 **“N种字串的组合对象”** 变成 **“10种阿拉伯数字”** 的处理，极大的简化和减少了处理对象。
+于是，我们的研究对象由 **“N种字串的组合对象”** 变成 **“10种阿拉伯数字”** 的处理，极大的简化和减少了处理对象。
 
-## 9.1   分割算法
+## 9.1   分割算法
 
 现实生活中的字符验证码的产生千奇百怪，有各种扭曲和变形。关于字符分割的算法，也没有很通用的方式。这个算法也是需要开发人员仔细研究所要识别的字符图片的特点来制定的。
 
@@ -623,75 +393,58 @@ Tips:这个地方是相当考验人的细心和耐心程度了，这个地方的
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
 ```
-def
- get_crop_imgs(img):
-    
-"""
-
+def get_crop_imgs(img):
+    """
     按照图片的特点,进行切割,这个要根据具体的验证码来进行工作. # 见原理图
     :param img:
     :return:
-    
-"""
-
-    child_img_list 
-=
- []
-    
-for
- i 
-in
- range(4
-):
-        x 
-= 2 + i * (6 + 4)  
-#
- 见原理图
-
-        y =
- 0
-        child_img 
-= img.crop((x, y, x + 6, y + 10
-))
+    """
+    child_img_list = []
+    for i in range(4):
+        x = 2 + i * (6 + 4)  # 见原理图
+        y = 0
+        child_img = img.crop((x, y, x + 6, y + 10))
         child_img_list.append(child_img)
 
-    
-return
- child_img_list
+    return child_img_list
+
 ```
 
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
-然后就能得到被切割的 **原子级** 的图片元素了：
+然后就能得到被切割的 **原子级** 的图片元素了：
 
 ![](http://images2015.cnblogs.com/blog/111649/201607/111649-20160715101853357-233548447.png)
 
-## 9.2   内容小结
+## 9.2   内容小结
 
 基于本部分的内容的讨论，相信大家已经了解到了，如果验证码的干扰（扭曲，噪点，干扰色块，干扰线……）做得不够强的话，可以得到如下两个结论：
 
 * 4位字符和40000位字符的验证码区别不大
 
-* **纯数字**
-   和 
-  **数字及字母组合**
-   的验证码区别不大
+* **纯数字**  
+   和   
+  **数字及字母组合**  
+   的验证码区别不大
+
   * 纯数字。分类数为10
 
   * 纯字母
+
     * 不区分大小写。分类数为26
     * 区分大小写。分类数为52
+
   * 数字和区分大小写的字母组合。分类数为62
 
-在没有形成 **指数级或者几何级** 的难度增加，而只是 **线性有限级** 增加计算量时，意义不太大。
+在没有形成 **指数级或者几何级** 的难度增加，而只是 **线性有限级** 增加计算量时，意义不太大。
 
-# 10   尺寸归一
+# 10   尺寸归一
 
 本文所选择的研究对象本身尺寸就是统一状态：6\*10的规格，所以此部分不需要额外处理。但是一些进行了扭曲和缩放的验证码，则此部分也会是一个图像处理的难点。
 
-# 11   模型训练步骤
+# 11   模型训练步骤
 
-在前面的环节，已经完成了对单个图片的处理和分割了。后面就开始进行 **识别模型** 的训练了。
+在前面的环节，已经完成了对单个图片的处理和分割了。后面就开始进行 **识别模型** 的训练了。
 
 整个训练过程如下：
 
@@ -700,7 +453,7 @@ return
 3. 定义单张图片的识别特征
 4. 使用SVM训练模型对打了标签的特征文件进行训练，得到模型文件
 
-# 12   素材准备
+# 12   素材准备
 
 本文在训练阶段重新下载了同一模式的4数字的验证图片总计：3000张。然后对这3000张图片进行处理和切割，得到12000张原子级图片。
 
@@ -708,24 +461,24 @@ return
 
 ![](http://images2015.cnblogs.com/blog/111649/201607/111649-20160715102011889-901021871.png)
 
-# 13   素材标记
+# 13   素材标记
 
-由于本文使用的这种识别方法中，机器在最开始是不具备任何 数字的观念的。所以需要人为的对素材进行标识，**告诉** 机器什么样的图片的内容是 1……。
+由于本文使用的这种识别方法中，机器在最开始是不具备任何 数字的观念的。所以需要人为的对素材进行标识，**告诉** 机器什么样的图片的内容是 1……。
 
-这个过程叫做 **“标记”**。
+这个过程叫做 **“标记”**。
 
 具体打标签的方法是：
 
 1. 为0~9每个数字建立一个目录，目录名称为相应数字（相当于标签）
 
-2. **人为判定** 图片内容，并将图片拖到指定数字目录中
+2. **人为判定** 图片内容，并将图片拖到指定数字目录中
 
-3. 每个目录中存放100张左右的素材
+3. 每个目录中存放100张左右的素材  
    一般情况下，标记的素材越多，那么训练出的模型的分辨能力和预测能力越强。例如本文中，标记素材为十多张的时候，对新的测试图片识别率基本为零，但是到达100张时，则可以达到近乎100%的识别率
 
 ![](http://images2015.cnblogs.com/blog/111649/201607/111649-20160715102032076-1694581285.png)
 
-# 14   特征选择
+# 14   特征选择
 
 对于切割后的单个字符图片，像素级放大图如下：
 
@@ -733,9 +486,9 @@ return
 
 从宏观上看，不同的数字图片的本质就是将黑色按照一定规则填充在相应的像素点上，所以这些特征都是最后围绕像素点进行。
 
-字符图片 **宽6个像素，高10个像素** ，理论上可以最简单粗暴地可以定义出60个特征：60个像素点上面的像素值。但是显然这样高维度必然会造成过大的计算量，可以适当的降维。
+字符图片 **宽6个像素，高10个像素** ，理论上可以最简单粗暴地可以定义出60个特征：60个像素点上面的像素值。但是显然这样高维度必然会造成过大的计算量，可以适当的降维。
 
-通过查阅相应的文献 [\[2\]](http://www.cnblogs.com/beer/p/5672678.html#get-char-feature)，给出另外一种简单粗暴的特征定义：
+通过查阅相应的文献 [\[2\]](http://www.cnblogs.com/beer/p/5672678.html#get-char-feature)，给出另外一种简单粗暴的特征定义：
 
 1. 每行上黑色像素的个数，可以得到10个特征
 2. 每列上黑色像素的个数，可以得到6个特征
@@ -745,89 +498,43 @@ return
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
 ```
-def
- get_feature(img):
-    
-"""
-
+def get_feature(img):
+    """
     获取指定图片的特征值,
     1. 按照每排的像素点,高度为10,则有10个维度,然后为6列,总共16个维度
     :param img_path:
     :return:一个维度为10（高度）的列表
-    
-"""
+    """
 
+    width, height = img.size
 
-    width, height 
-=
- img.size
-
-    pixel_cnt_list 
-=
- []
-    height 
-= 10
-    
-for
- y 
-in
- range(height):
-        pix_cnt_x 
-=
- 0
-        
-for
- x 
-in
- range(width):
-            
-if
- img.getpixel((x, y)) == 0:  
-#
- 黑色点
-
+    pixel_cnt_list = []
+    height = 10
+    for y in range(height):
+        pix_cnt_x = 0
+        for x in range(width):
+            if img.getpixel((x, y)) == 0:  # 黑色点
                 pix_cnt_x += 1
-
 
         pixel_cnt_list.append(pix_cnt_x)
 
-    
-for
- x 
-in
- range(width):
-        pix_cnt_y 
-=
- 0
-        
-for
- y 
-in
- range(height):
-            
-if
- img.getpixel((x, y)) == 0:  
-#
- 黑色点
-
+    for x in range(width):
+        pix_cnt_y = 0
+        for y in range(height):
+            if img.getpixel((x, y)) == 0:  # 黑色点
                 pix_cnt_y += 1
-
 
         pixel_cnt_list.append(pix_cnt_y)
 
-    
-return
- pixel_cnt_list
+    return pixel_cnt_list
+
 ```
 
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
-然后就将图片素材特征化，按照 **libSVM** 指定的格式生成一组带特征值和标记值的向量文件。内容示例如下：
+然后就将图片素材特征化，按照 **libSVM** 指定的格式生成一组带特征值和标记值的向量文件。内容示例如下：
 
 ![](http://images2015.cnblogs.com/blog/111649/201607/111649-20160715102139764-559736071.png)
-
-  
-
 
 说明如下：
 
@@ -835,53 +542,41 @@ return
 2. 后面是16组特征值，冒号前面是索引号，后面是值
 3. 如果有1000张训练图片，那么会产生1000行的记录
 
-对此文件格式有兴趣的同学，可以到 **libSVM** 官网搜索更多的资料。
+对此文件格式有兴趣的同学，可以到 **libSVM** 官网搜索更多的资料。
 
-# 15   模型训练
+# 15   模型训练
 
-到这个阶段后，由于本文直接使用的是开源的 **libSVM** 方案，属于应用了，所以此处内容就比较简单的。只需要输入特征文件，然后输出模型文件即可。
+到这个阶段后，由于本文直接使用的是开源的 **libSVM** 方案，属于应用了，所以此处内容就比较简单的。只需要输入特征文件，然后输出模型文件即可。
 
-可以搜索到很多相关中文资料 [\[1\]](http://www.cnblogs.com/beer/p/5672678.html#lib-svm) 。
+可以搜索到很多相关中文资料 [\[1\]](http://www.cnblogs.com/beer/p/5672678.html#lib-svm) 。
 
 主要代码如下：
 
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
 ```
-def
- train_svm_model():
-    
-"""
-
+def train_svm_model():
+    """
     训练并生成model文件
     :return:
-    
-"""
-
-    y, x 
-= svm_read_problem(svm_root + 
-'
-/train_pix_feature_xy.txt
-'
-)
-    model 
-=
- svm_train(y, x)
+    """
+    y, x = svm_read_problem(svm_root + '/train_pix_feature_xy.txt')
+    model = svm_train(y, x)
     svm_save_model(model_path, model)
 ```
 
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
-备注：生成的模型文件名称为 **svm\_model\_file**
+备注：生成的模型文件名称为 **svm\_model\_file**
 
-# 16   模型测试
+# 16   模型测试
 
-训练生成模型后，需要使用 **训练集** 之外的全新的标记后的图片作为 **测试集** 来对模型进行测试。
+训练生成模型后，需要使用 **训练集** 之外的全新的标记后的图片作为 **测试集** 来对模型进行测试。
 
 本文中的测试实验如下：
 
 * 使用一组全部标记为8的21张图片来进行模型测试
-* 测试图片生成带标记的特征文件名称为 
+* 测试图片生成带标记的特征文件名称为 
   last\_test\_pix\_xy\_new.txt
 
 在早期训练集样本只有每字符十几张图的时候，虽然对训练集样本有很好的区分度，但是对于新样本测试集基本没区分能力，识别基本是错误的。逐渐增加标记为8的训练集的样本后情况有了比较好的改观：
@@ -896,69 +591,30 @@ def
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
 ```
-def
- svm_model_test():
-    
-"""
-
+def svm_model_test():
+    """
     使用测试集测试模型
     :return:
-    
-"""
+    """
+    yt, xt = svm_read_problem(svm_root + '/last_test_pix_xy_new.txt')
+    model = svm_load_model(model_path)
+    p_label, p_acc, p_val = svm_predict(yt, xt, model)#p_label即为识别的结果
 
-    yt, xt 
-= svm_read_problem(svm_root + 
-'
-/last_test_pix_xy_new.txt
-'
-)
-    model 
-=
- svm_load_model(model_path)
-    p_label, p_acc, p_val 
-= svm_predict(yt, xt, model)
-#
-p_label即为识别的结果
-
-    cnt 
-=
- 0
-    
-for
- item 
-in
- p_label:
-        
-print
-(
-'
-%d
-'
- % item, end=
-'
-,
-'
-)
-        cnt 
-+= 1
-        
-if
- cnt % 8 ==
- 0:
-            
-print
-(
-''
-)
+    cnt = 0
+    for item in p_label:
+        print('%d' % item, end=',')
+        cnt += 1
+        if cnt % 8 == 0:
+            print('')
 ```
 
 [![](http://common.cnblogs.com/images/copycode.gif "复制代码")](javascript:void%280%29;)
 
 至此，验证的识别工作算是完满结束。
 
-# 17   完整识别流程
+# 17   完整识别流程
 
-在前面的环节，**验证码识别** 的相关工具集都准备好了。然后对指定的网络上的动态验证码形成持续不断地识别，还需要另外写一点代码来组织这个流程，以形成稳定的黑盒的验证码识别接口。
+在前面的环节，**验证码识别** 的相关工具集都准备好了。然后对指定的网络上的动态验证码形成持续不断地识别，还需要另外写一点代码来组织这个流程，以形成稳定的黑盒的验证码识别接口。
 
 主要步骤如下：
 
@@ -973,11 +629,11 @@ print
 
 ![](http://images2015.cnblogs.com/blog/111649/201607/111649-20160715102221232-1619500816.png)
 
-显然，已经达到几乎 **100%** 的识别率了。
+显然，已经达到几乎 **100%** 的识别率了。
 
 在本算法没有做任何优化的情况下，在目前主流配置的PC机上运行此程序，可以实现200ms识别一个（很大的耗时来自网络请求的阻塞）。
 
-# 18   效率优化
+# 18   效率优化
 
 后期通过优化的方式可以达到更好的效率。
 
@@ -996,7 +652,7 @@ print
 
 基本上，10台4核心机器同时请求，保守估计效率可以提升到1s识别1万个验证码。
 
-# 19   互联网安全警示
+# 19   互联网安全警示
 
 如果验证码被识别出来后，会有什么安全隐患呢？
 
@@ -1015,7 +671,7 @@ print
 
 [Web应用系统的小安全漏洞及相应的攻击方式](http://www.cnblogs.com/beer/p/4814587.html)
 
-> http://www.cnblogs.com/beer/p/4814587.html
+> [http://www.cnblogs.com/beer/p/4814587.html](http://www.cnblogs.com/beer/p/4814587.html)
 
 通过上面的例子，大家可以看到：
 
@@ -1024,7 +680,7 @@ print
 
 所以，这一块虽然小，但是安全问题不能忽视。
 
-# 20   积极应用场景
+# 20   积极应用场景
 
 本文介绍的其实是一项简单的OCR技术实现。有一些很好同时也很有积极进步意义的应用场景：
 
@@ -1040,11 +696,11 @@ print
 
 所以如果拍照时原始数据采集比较规范的情况下，识别起来应该难度也不大。
 
-# 21   小结
+# 21   小结
 
 本文只是选取了一个比较典型的而且比较简单的验证码的识别作为示例，但是基本上能表述出一个识别此类验证码的完整流程，可以供大家交流学习。
 
-由于目前全球的IT技术实力参差不齐，现在很多旧的IT系统里面都存在一些旧的页面框架，里面使用的验证码也是相当古老，对于当下的一些识别技术来说，完全不堪一击。比如，我看到一些在校大学生就直接拿自己学校的 **教务系统** 的验证码来 **开刀练习** 的。
+由于目前全球的IT技术实力参差不齐，现在很多旧的IT系统里面都存在一些旧的页面框架，里面使用的验证码也是相当古老，对于当下的一些识别技术来说，完全不堪一击。比如，我看到一些在校大学生就直接拿自己学校的 **教务系统** 的验证码来 **开刀练习** 的。
 
 最后，本文特意提出如下倡议：
 
@@ -1055,9 +711,9 @@ print
 2. 对于仍然沿用旧的落后的IT系统的公司或者机构相关人员
    应该尽快认识到事情的严重性，赶紧升级自己的系统，或者将这一块业务交付给专门的安全公司
 
-# 22   参考资料
+# 22   参考资料
 
-| [\[1\]](http://www.cnblogs.com/beer/p/5672678.html#id24) | [LibSVM for Python 使用](http://www.cnblogs.com/Finley/p/5329417.html)http://www.cnblogs.com/Finley/p/5329417.html |
+| [\[1\]](http://www.cnblogs.com/beer/p/5672678.html#id24) | [LibSVM for Python 使用](http://www.cnblogs.com/Finley/p/5329417.html)[http://www.cnblogs.com/Finley/p/5329417.html](http://www.cnblogs.com/Finley/p/5329417.html) |
 | :--- | :--- |
 
 
@@ -1065,9 +721,9 @@ print
 | :--- | :--- |
 
 
-# 23   最后题外话
+# 23   最后题外话
 
-我估计这样 **长文** 绝大部分人是不会有兴趣全部看完的。但为了它的内容完整性，还是决定先以整篇的方式发表出来吧。
+我估计这样 **长文** 绝大部分人是不会有兴趣全部看完的。但为了它的内容完整性，还是决定先以整篇的方式发表出来吧。
 
 后面有空再拆分连载吧。
 
