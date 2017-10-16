@@ -53,4 +53,5 @@
 * [基于token的多平台身份认证架构设计](ji-yu-token-de-duo-ping-tai-shen-fen-ren-zheng-jia-gou-she-ji.md)
 * ["过期不候"--具备生命周期的数据的技术实现方案](guo-qi-bu-501922-ju-bei-sheng-ming-zhou-qi-de-shu-ju-de-ji-zhu-shi-xian-fang-an.md)
 * [字符型图片验证码识别完整过程及Python实现](zi-fu-xing-tu-pian-yan-zheng-ma-shi-bie-wan-zheng-guo-cheng-ji-python-shi-xian.md)
+* [Node.js的线程和进程](nodejsde-xian-cheng-he-jin-cheng.md)
 
