@@ -164,9 +164,9 @@ fibo(35)=14930352
 
 注意我们上面代码的斐波那契数组算法并不是最优算法，只是为了模拟cpu密集型计算任务。
 
-　　由于tagg包目前只能在linux下安装运行，所以我fork了一个分支，修改了部分tagg包的代码，发布了tagg2包。tagg2包同样具有tagg包的多线程功能，采用新的node-gyp命令进行编译，同时它跨平台支持，mac，linux，windows下都可以使用，对开发人员的api也更加友好。安装方法很简单，直接npm install tagg2。
+由于tagg包目前只能在linux下安装运行，所以我fork了一个分支，修改了部分tagg包的代码，发布了tagg2包。tagg2包同样具有tagg包的多线程功能，采用新的node-gyp命令进行编译，同时它跨平台支持，mac，linux，windows下都可以使用，对开发人员的api也更加友好。安装方法很简单，直接npm install tagg2。
 
-　　一个利用tagg2计算斐波那契数组的http服务器代码：
+一个利用tagg2计算斐波那契数组的http服务器代码：
 
 ```
 var express = require('express');
@@ -192,12 +192,11 @@ app.get('/', function(req, res){
 });
 app.listen(8124);
 console.log('listen on 8124');
-
 ```
 
-　　其中~~req.query.n表示将用户传递的参数n取整，功能类似Math.floor函数。
+其中~~req.query.n表示将用户传递的参数n取整，功能类似Math.floor函数。
 
-　　我们用express框架搭建了一个web服务器，根据用户发送的参数n的值来创建子线程计算斐波那契数组，当子线程计算完毕之后将结果响应给客户端。由于计算是丢入子线程中运行的，所以整个主线程不会被阻塞，还是能够继续处理新请求的。
+我们用express框架搭建了一个web服务器，根据用户发送的参数n的值来创建子线程计算斐波那契数组，当子线程计算完毕之后将结果响应给客户端。由于计算是丢入子线程中运行的，所以整个主线程不会被阻塞，还是能够继续处理新请求的。
 
 我们利用apache的http压力测试工具ab来进行一次简单的压力测试，看看执行斐波那契数组35次，100客户端并发100个请求，我们的QPS \(Query Per Second\)每秒查询率在多少。
 
@@ -205,14 +204,13 @@ console.log('listen on 8124');
 
 我们的测试硬件：linux 2.6.4 4cpu 8G 64bit，网络环境则是内网。
 
-　　ab压力测试命令：
+ab压力测试命令：
 
 ```
 ab -c 100 -n 100 http://192.168.28.5:8124/?n=35
-
 ```
 
-　　压力测试结果：
+压力测试结果：
 
 ```
 Server Software:        
@@ -251,14 +249,13 @@ Percentage of the requests served within a certain time (ms)
   98%   5600
   99%   5602
  100%   5602 (longest request)
-
 ```
 
-　　我们看到Requests per second表示每秒我们服务器处理的任务数量，这里是17.84。第二个我们比较关心的是两个Time per request结果，上面一行Time per request:5605.769 \[ms\]\(mean\)表示当前这个并发量下处理每组请求的时间，而下面这个Time per request:56.058 \[ms\]\(mean, across all concurrent requests\)表示每个用户平均处理时间，因为我们本次测试并发是100，所以结果正好是上一行的100分之1。得出本次测试平均每个用户请求的平均等待时间为56.058 \[ms\]。
+我们看到Requests per second表示每秒我们服务器处理的任务数量，这里是17.84。第二个我们比较关心的是两个Time per request结果，上面一行Time per request:5605.769 \[ms\]\(mean\)表示当前这个并发量下处理每组请求的时间，而下面这个Time per request:56.058 \[ms\]\(mean, across all concurrent requests\)表示每个用户平均处理时间，因为我们本次测试并发是100，所以结果正好是上一行的100分之1。得出本次测试平均每个用户请求的平均等待时间为56.058 \[ms\]。
 
-　　另外我们看下最后带有百分比的列表，可以看到50%的用户是在5531 ms以内返回的，最慢的也不过5602 ms，响应延迟非常的平均。
+另外我们看下最后带有百分比的列表，可以看到50%的用户是在5531 ms以内返回的，最慢的也不过5602 ms，响应延迟非常的平均。
 
-　　我们如果用cluster来启动4个进程，是否可以充分利用cpu达到tagg2那样的QPS呢？我们在同样的网络环境和测试机上运行如下代码：
+我们如果用cluster来启动4个进程，是否可以充分利用cpu达到tagg2那样的QPS呢？我们在同样的网络环境和测试机上运行如下代码：
 
 ```
 var cluster = require('cluster');//加载clustr模块
@@ -284,20 +281,18 @@ if (cluster.isMaster) {
     app.listen(8124);
     console.log('listen on 8124');
 }
-
 ```
 
-　　在终端屏幕上打印了4行信息：
+在终端屏幕上打印了4行信息：
 
 ```
 listen on 8124
 listen on 8124
 listen on 8124
 listen on 8124
-
 ```
 
-　　我们成功启动了4个cluster之后，用同样的ab压力测试命令对8124端口进行测试，结果如下：
+我们成功启动了4个cluster之后，用同样的ab压力测试命令对8124端口进行测试，结果如下：
 
 ```
 Server Software:        
@@ -336,44 +331,43 @@ Percentage of the requests served within a certain time (ms)
   98%  10308
   99%  10504
  100%  10504 (longest request)
-
 ```
 
-　　通过和上面tagg2包的测试结果对比，我们发现区别很大。首先每秒处理的任务数从17.84 \[\#/sec\]下降到了9.52 \[\#/sec\]，这说明我们web服务器整体的吞吐率下降了；然后每个用户请求的平均等待时间也从56.058 \[ms\]提高到了105.088 \[ms\]，用户等待的时间也更长了。
+通过和上面tagg2包的测试结果对比，我们发现区别很大。首先每秒处理的任务数从17.84 \[\#/sec\]下降到了9.52 \[\#/sec\]，这说明我们web服务器整体的吞吐率下降了；然后每个用户请求的平均等待时间也从56.058 \[ms\]提高到了105.088 \[ms\]，用户等待的时间也更长了。
 
-　　最后我们发现用户请求处理的时长非常的不均匀，50%的用户在2934 ms内返回了，最慢的等待达到了10504 ms。虽然我们使用了cluster启动了4个Node.js进程处理用户请求，但是对于每个Node.js进程来说还是单线程的，所以当有4个用户跑满了4个Node.js的cluster进程之后，新来的用户请求就只能等待了，最后造成了先到的用户处理时间短，后到的用户请求处理时间比较长，就造成了用户等待时间非常的不平均。
+最后我们发现用户请求处理的时长非常的不均匀，50%的用户在2934 ms内返回了，最慢的等待达到了10504 ms。虽然我们使用了cluster启动了4个Node.js进程处理用户请求，但是对于每个Node.js进程来说还是单线程的，所以当有4个用户跑满了4个Node.js的cluster进程之后，新来的用户请求就只能等待了，最后造成了先到的用户处理时间短，后到的用户请求处理时间比较长，就造成了用户等待时间非常的不平均。
 
-### 　　v8引擎
+### v8引擎
 
-　　大家看到这里是不是开始心潮澎湃，感觉js一统江湖的时代来临了，单线程异步非阻塞的模型可以胜任大并发，同时开发也非常高效，多线程下的js可以承担cpu密集型任务，不会有主线程阻塞而引起的性能问题。
+大家看到这里是不是开始心潮澎湃，感觉js一统江湖的时代来临了，单线程异步非阻塞的模型可以胜任大并发，同时开发也非常高效，多线程下的js可以承担cpu密集型任务，不会有主线程阻塞而引起的性能问题。
 
-　　但是，不论tagg还是tagg2包都是利用phtread库和v8的v8::Isolate Class类来实现js多线程功能的。
+但是，不论tagg还是tagg2包都是利用phtread库和v8的v8::Isolate Class类来实现js多线程功能的。
 
 > Isolate代表着一个独立的v8引擎实例，v8的Isolate拥有完全分开的状态，在一个Isolate实例中的对象不能够在另外一个Isolate实例中使用。嵌入式开发者可以在其他线程创建一些额外的Isolate实例并行运行。在任何时刻，一个Isolate实例只能够被一个线程进行访问，可以利用加锁/解锁进行同步操作。
 
-　　换而言之，我们在进行v8的嵌入式开发时，无法在多线程中访问js变量，这条规则将直接导致我们之前的tagg2里面线程执行的函数无法使用Node.js的核心api，比如fs，crypto等模块。如此看来，tagg2包还是有它使用的局限性，针对一些可以使用js原生的大量计算或循环可以使用tagg2，Node.js核心api因为无法从主线程共享对象的关系，也就不能跨线程使用了。
+换而言之，我们在进行v8的嵌入式开发时，无法在多线程中访问js变量，这条规则将直接导致我们之前的tagg2里面线程执行的函数无法使用Node.js的核心api，比如fs，crypto等模块。如此看来，tagg2包还是有它使用的局限性，针对一些可以使用js原生的大量计算或循环可以使用tagg2，Node.js核心api因为无法从主线程共享对象的关系，也就不能跨线程使用了。
 
-### 　　libuv
+### libuv
 
-　　最后，如果我们非要让Node.js支持多线程，还是提倡使用官方的做法，利用libuv库来实现。
+最后，如果我们非要让Node.js支持多线程，还是提倡使用官方的做法，利用libuv库来实现。
 
 > libuv是一个跨平台的异步I/O库，它主要用于Node.js的开发，同时他也被Mozilla's Rust language, Luvit, Julia, pyuv等使用。它主要包括了Event loops事件循环，Filesystem文件系统，Networking网络支持，Threads线程，Processes进程，Utilities其他工具。
 
-　　在Node.js核心api中的异步多线程大多是使用libuv来实现的，下一章将带领大家开发一个让Node.js支持多线程并基于libuv的Node.js包。
+在Node.js核心api中的异步多线程大多是使用libuv来实现的，下一章将带领大家开发一个让Node.js支持多线程并基于libuv的Node.js包。
 
-## 　多进程
+## 多进程
 
-　　在支持html5的浏览器里，我们可以使用webworker来将一些耗时的计算丢入worker进程中执行，这样主进程就不会阻塞，用户也就不会有卡顿的感觉了。在Node.js中是否也可以使用这类技术，保证主线程的通畅呢？
+在支持html5的浏览器里，我们可以使用webworker来将一些耗时的计算丢入worker进程中执行，这样主进程就不会阻塞，用户也就不会有卡顿的感觉了。在Node.js中是否也可以使用这类技术，保证主线程的通畅呢？
 
-### 　　cluster
+### cluster
 
-　　cluster可以用来让Node.js充分利用多核cpu的性能，同时也可以让Node.js程序更加健壮，官网上的cluster示例已经告诉我们如何重新启动一个因为异常而奔溃的子进程。
+cluster可以用来让Node.js充分利用多核cpu的性能，同时也可以让Node.js程序更加健壮，官网上的cluster示例已经告诉我们如何重新启动一个因为异常而奔溃的子进程。
 
-### 　　webworker
+### webworker
 
-　　想要像在浏览器端那样启动worker进程，我们需要利用Node.js核心api里的child\_process模块。child\_process模块提供了fork的方法，可以启动一个Node.js文件，将它作为worker进程，当worker进程工作完毕，把结果通过send方法传递给主进程，然后自动退出，这样我们就利用了多进程来解决主线程阻塞的问题。
+想要像在浏览器端那样启动worker进程，我们需要利用Node.js核心api里的child\_process模块。child\_process模块提供了fork的方法，可以启动一个Node.js文件，将它作为worker进程，当worker进程工作完毕，把结果通过send方法传递给主进程，然后自动退出，这样我们就利用了多进程来解决主线程阻塞的问题。
 
-　　我们先启动一个web服务，还是接收参数计算斐波那契数组：
+我们先启动一个web服务，还是接收参数计算斐波那契数组：
 
 ```
 var express = require('express');
@@ -394,12 +388,11 @@ app.get('/', function(req, res){
   //发送给工作进程计算fibo的数量
 });
 app.listen(8124);
-
 ```
 
-　　我们通过express监听8124端口，对每个用户的请求都会去fork一个子进程，通过调用worker.send方法将参数n传递给子进程，同时监听子进程发送消息的message事件，将结果响应给客户端。
+我们通过express监听8124端口，对每个用户的请求都会去fork一个子进程，通过调用worker.send方法将参数n传递给子进程，同时监听子进程发送消息的message事件，将结果响应给客户端。
 
-　　下面是被fork的work\_fibo.js文件内容：
+下面是被fork的work\_fibo.js文件内容：
 
 ```
 var fibo = function fibo (n) {//定义算法
@@ -422,14 +415,13 @@ process.on('message', function(m) {
 process.on('SIGHUP', function() {
         process.exit();//收到kill信息，进程退出
 });
-
 ```
 
-　　我们先定义函数fibo用来计算斐波那契数组，然后监听了主线程发来的消息，计算完毕之后将结果send到主线程。同时还监听process的SIGHUP事件，触发此事件就进程退出。
+我们先定义函数fibo用来计算斐波那契数组，然后监听了主线程发来的消息，计算完毕之后将结果send到主线程。同时还监听process的SIGHUP事件，触发此事件就进程退出。
 
-　　这里我们有一点需要注意，主线程的kill方法并不是真的使子进程退出，而是会触发子进程的SIGHUP事件，真正的退出还是依靠process.exit\(\);。
+这里我们有一点需要注意，主线程的kill方法并不是真的使子进程退出，而是会触发子进程的SIGHUP事件，真正的退出还是依靠process.exit\(\);。
 
-　　下面我们用ab 命令测试一下多进程方案的处理性能和用户请求延迟，测试环境不变，还是100个并发100次请求，计算斐波那切数组第35位:
+下面我们用ab 命令测试一下多进程方案的处理性能和用户请求延迟，测试环境不变，还是100个并发100次请求，计算斐波那切数组第35位:
 
 ```
 Server Software:        
@@ -468,25 +460,23 @@ Percentage of the requests served within a certain time (ms)
   98%   7017
   99%   7032
  100%   7032 (longest request)
-
 ```
 
-　　压力测试结果QPS约为14.21,相比cluster来说，还是快了很多，每个用户请求的延迟都很平均，因为进程的创建和销毁的开销要大于线程，所以在性能方面略低于tagg2，不过相对于cluster方案，这样的提升还是令我们满意的。
+压力测试结果QPS约为14.21,相比cluster来说，还是快了很多，每个用户请求的延迟都很平均，因为进程的创建和销毁的开销要大于线程，所以在性能方面略低于tagg2，不过相对于cluster方案，这样的提升还是令我们满意的。
 
-### 　　换一种思路
+### 换一种思路
 
-　　使用child\_process模块的fork方法确实可以让我们很好的解决单线程对cpu密集型任务的阻塞问题，同时又没有tagg2包那样无法使用Node.js核心api的限制。
+使用child\_process模块的fork方法确实可以让我们很好的解决单线程对cpu密集型任务的阻塞问题，同时又没有tagg2包那样无法使用Node.js核心api的限制。
 
-　　但是如果我的worker具有多样性，每次在利用child\_process模块解决问题时都需要去创建一个worker.js的工作函数文件，有点麻烦。我们是不是可以更加简单一些呢？
+但是如果我的worker具有多样性，每次在利用child\_process模块解决问题时都需要去创建一个worker.js的工作函数文件，有点麻烦。我们是不是可以更加简单一些呢？
 
-　　在我们启动Node.js程序时，node命令可以带上-e这个参数，它将直接执行-e后面的字符串，如下代码就将打印出hello world。
+在我们启动Node.js程序时，node命令可以带上-e这个参数，它将直接执行-e后面的字符串，如下代码就将打印出hello world。
 
 ```
 node -e "console.log('hello world')"
-
 ```
 
-　　合理的利用这个特性，我们就可以免去每次都创建一个文件的麻烦。
+合理的利用这个特性，我们就可以免去每次都创建一个文件的麻烦。
 
 ```
 var express = require('express');
@@ -517,62 +507,53 @@ app.get('/', function(req, res){
   });
 });
 app.listen(8124);
-
 ```
 
-　　代码很简单，我们主要关注3个地方。
+代码很简单，我们主要关注3个地方。
 
-　　第一、我们定义了spawn\_worker函数，他其实就是将会在-e后面执行的工作函数，所以我们把计算斐波那契数组的算法定义在内，spawn\_worker函数接收2个参数，第一个参数n表示客户请求要计算的斐波那契数组的位数，第二个end参数是一个函数，如果计算完毕则执行end，将结果传回主线程；
+第一、我们定义了spawn\_worker函数，他其实就是将会在-e后面执行的工作函数，所以我们把计算斐波那契数组的算法定义在内，spawn\_worker函数接收2个参数，第一个参数n表示客户请求要计算的斐波那契数组的位数，第二个end参数是一个函数，如果计算完毕则执行end，将结果传回主线程；
 
-　　第二、真正当Node.js脚步执行的字符串其实就是spawn\_cmd里的内容，它的内容我们通过运行之后的打印信息，很容易就能明白；
+第二、真正当Node.js脚步执行的字符串其实就是spawn\_cmd里的内容，它的内容我们通过运行之后的打印信息，很容易就能明白；
 
-　　第三、我们利用child\_process的spawn方法，类似在命令行里执行了node -e "js code"，启动Node.js工作进程，同时监听子进程的标准输出，将数据保存起来，当子进程退出之后把结果响应给用户。
+第三、我们利用child\_process的spawn方法，类似在命令行里执行了node -e "js code"，启动Node.js工作进程，同时监听子进程的标准输出，将数据保存起来，当子进程退出之后把结果响应给用户。
 
-　　现在主要的焦点就是变量spawn\_cmd到底保存了什么，我们打开浏览器在地址栏里输入：
+现在主要的焦点就是变量spawn\_cmd到底保存了什么，我们打开浏览器在地址栏里输入：
 
 ```
 http://127.0.0.1:8124/?n=35
-
 ```
 
-　　下面就是程序运行之后的打印信息，
+下面就是程序运行之后的打印信息，
 
 ```
 (function (n,end){
     var fibo = function fibo (n) {
-      return n 
->
- 1 ? fibo(n - 1) + fibo(n - 2) : 1;
+      return n >1 ? fibo(n - 1) + fibo(n - 2) : 1;
     }
     end(fibo(n));
   }(35,function (result){
       console.log(result);
       process.exit();
 }));
-
 ```
 
-　　对于在子进程执行的工作函数的两个参数n和end现在一目了然，n代表着用户请求的参数，期望获得的斐波那契数组的位数，而end参数则是一个匿名函数，在标准输出中打印计算结果然后退出进程。
+对于在子进程执行的工作函数的两个参数n和end现在一目了然，n代表着用户请求的参数，期望获得的斐波那契数组的位数，而end参数则是一个匿名函数，在标准输出中打印计算结果然后退出进程。
 
-　　node -e命令虽然可以减少创建文件的麻烦，但同时它也有命令行长度的限制，这个值各个系统都不相同，我们通过命令getconf ARG\_MAX来获得最大命令长度，例如：MAC OSX下是262,144 byte，而我的linux虚拟机则是131072 byte。
+node -e命令虽然可以减少创建文件的麻烦，但同时它也有命令行长度的限制，这个值各个系统都不相同，我们通过命令getconf ARG\_MAX来获得最大命令长度，例如：MAC OSX下是262,144 byte，而我的linux虚拟机则是131072 byte。
 
-## 　多进程和多线程
+## 多进程和多线程
 
-　　大部分多线程解决cpu密集型任务的方案都可以用我们之前讨论的多进程方案来替代，但是有一些比较特殊的场景多线程的优势就发挥出来了，下面就拿我们最常见的http web服务器响应一个小的静态文件作为例子。
+大部分多线程解决cpu密集型任务的方案都可以用我们之前讨论的多进程方案来替代，但是有一些比较特殊的场景多线程的优势就发挥出来了，下面就拿我们最常见的http web服务器响应一个小的静态文件作为例子。
 
-　　以express处理小型静态文件为例，大致的处理流程如下： 1、首先获取文件状态，判断文件的修改时间或者判断etag来确定是否响应304给客户端，让客户端继续使用本地缓存。 2、如果缓存已经失效或者客户端没有缓存，就需要获取文件的内容到buffer中，为响应作准备。 3、然后判断文件的MIME类型，如果是类似html，js，css等静态资源，还需要gzip压缩之后传输给客户端 4、最后将gzip压缩完成的静态文件响应给客户端。
+以express处理小型静态文件为例，大致的处理流程如下： 1、首先获取文件状态，判断文件的修改时间或者判断etag来确定是否响应304给客户端，让客户端继续使用本地缓存。 2、如果缓存已经失效或者客户端没有缓存，就需要获取文件的内容到buffer中，为响应作准备。 3、然后判断文件的MIME类型，如果是类似html，js，css等静态资源，还需要gzip压缩之后传输给客户端 4、最后将gzip压缩完成的静态文件响应给客户端。
 
-　　下面是一个正常成功的Node.js处理静态资源无缓存流程图：
+下面是一个正常成功的Node.js处理静态资源无缓存流程图：
 
+这个流程中的\(2\)，\(3\)，\(4\)步都经历了从js到C++ ，打开和释放文件，还有调用了zlib库的gzip算法，其中每个异步的算法都会有创建和销毁线程的开销，所以这样也是大家诟病Node.js处理静态文件不给力的原因之一。
 
+为了改善这个问题，我之前有利用libuv库开发了一个改善Node.js的http/https处理静态文件的包，名为ifile，ifile包，之所以可以加速Node.js的静态文件处理性能，主要是减少了js和C++的互相调用，以及频繁的创建和销毁线程的开销，下图是ifile包处理一个静态无缓存资源的流程图：
 
-　　这个流程中的\(2\)，\(3\)，\(4\)步都经历了从js到C++ ，打开和释放文件，还有调用了zlib库的gzip算法，其中每个异步的算法都会有创建和销毁线程的开销，所以这样也是大家诟病Node.js处理静态文件不给力的原因之一。
-
-　　为了改善这个问题，我之前有利用libuv库开发了一个改善Node.js的http/https处理静态文件的包，名为ifile，ifile包，之所以可以加速Node.js的静态文件处理性能，主要是减少了js和C++的互相调用，以及频繁的创建和销毁线程的开销，下图是ifile包处理一个静态无缓存资源的流程图：
-
-
-
-　　由于全部工作都是在libuv的子线程中执行的，所以Node.js主线程不会阻塞，当然性能也会大幅提升了，使用ifile包非常简单，它能够和express无缝的对接。
+由于全部工作都是在libuv的子线程中执行的，所以Node.js主线程不会阻塞，当然性能也会大幅提升了，使用ifile包非常简单，它能够和express无缝的对接。
 
 ```
 var express = require('express');
@@ -580,18 +561,16 @@ var ifile = require("ifile");
 var app = express();    
 app.use(ifile.connect());  //默认值是 [['/static',__dirname]];        
 app.listen(8124);
-
 ```
 
-　　上面这4行代码就可以让express把静态资源交给ifile包来处理了，我们在这里对它进行了一个简单的压力测试，测试用例为响应一个大小为92kb的jquery.1.7.1.min.js文件，测试命令：
+上面这4行代码就可以让express把静态资源交给ifile包来处理了，我们在这里对它进行了一个简单的压力测试，测试用例为响应一个大小为92kb的jquery.1.7.1.min.js文件，测试命令：
 
 ```
 ab -c 500 -n 5000 -H "Accept-Encoding: gzip" 
 http://192.168.28.5:8124/static/jquery.1.7.1.min.js
-
 ```
 
-　　由于在ab命令中我们加入了-H "Accept-Encoding: gzip"，表示响应的静态文件希望是gzip压缩之后的，所以ifile将会把压缩之后的jquery.1.7.1.min.js文件响应给客户端。结果如下：
+由于在ab命令中我们加入了-H "Accept-Encoding: gzip"，表示响应的静态文件希望是gzip压缩之后的，所以ifile将会把压缩之后的jquery.1.7.1.min.js文件响应给客户端。结果如下：
 
 ```
 Server Software:        
@@ -630,12 +609,11 @@ Percentage of the requests served within a certain time (ms)
   98%   1815
   99%   1875
  100%   1921 (longest request)
-
 ```
 
-　　我们首先看到Document Length一项结果为33016 bytes说明我们的jquery文件已经被成功的gzip压缩，因为源文件大小是92kb；其次，我们最关心的Requests per second:542.16 \[\#/sec\]\(mean\)，说明我们每秒能处理542个任务；最后，我们看到，在这样的压力情况下，平均每个用户的延迟在1.844 \[ms\]。
+我们首先看到Document Length一项结果为33016 bytes说明我们的jquery文件已经被成功的gzip压缩，因为源文件大小是92kb；其次，我们最关心的Requests per second:542.16 \[\#/sec\]\(mean\)，说明我们每秒能处理542个任务；最后，我们看到，在这样的压力情况下，平均每个用户的延迟在1.844 \[ms\]。
 
-　　我们看下使用express框架处理这样的压力会是什么样的结果，express测试代码如下：
+我们看下使用express框架处理这样的压力会是什么样的结果，express测试代码如下：
 
 ```
 var express = require('express');
@@ -643,24 +621,21 @@ var app = express();
 app.use(express.compress());//支持gzip
 app.use('/static', express.static(__dirname + '/static'));
 app.listen(8124);
-
 ```
 
-　　代码同样非常简单，注意这里我们使用：
+代码同样非常简单，注意这里我们使用：
 
 ```
 app.use('/static', express.static(__dirname + '/static'));
-
 ```
 
-　　而不是：
+而不是：
 
 ```
 app.use(express.static(__dirname));
-
 ```
 
-　　后者每个请求都会去匹配一次文件是否存在，而前者只有请求url是/static开头的才会去匹配静态资源，所以前者效率更高一些。然后我们执行相同的ab压力测试命令看下结果：
+后者每个请求都会去匹配一次文件是否存在，而前者只有请求url是/static开头的才会去匹配静态资源，所以前者效率更高一些。然后我们执行相同的ab压力测试命令看下结果：
 
 ```
 Server Software:        
@@ -699,41 +674,40 @@ Percentage of the requests served within a certain time (ms)
   98%   2560
   99%   3737
  100%   9367 (longest request)
-
 ```
 
-　　同样分析一下结果，Document Length:33064 bytes表示文档大小为33064 bytes，说明我们的gzip起作用了，每秒处理任务数从ifile包的542下降到了300，最长用户等待时间也延长到了9367 ms，可见我们的努力起到了立竿见影的作用，js和C++互相调用以及线程的创建和释放并不是没有损耗的。
+同样分析一下结果，Document Length:33064 bytes表示文档大小为33064 bytes，说明我们的gzip起作用了，每秒处理任务数从ifile包的542下降到了300，最长用户等待时间也延长到了9367 ms，可见我们的努力起到了立竿见影的作用，js和C++互相调用以及线程的创建和释放并不是没有损耗的。
 
-　　但是当我在express的谷歌论坛里贴上这些测试结果，并宣传ifile包的时候，express的作者TJ，给出了不一样的评价，他在回复中说道：
+但是当我在express的谷歌论坛里贴上这些测试结果，并宣传ifile包的时候，express的作者TJ，给出了不一样的评价，他在回复中说道：
 
 > 请牢记你可能不需要这么高等级吞吐率的系统，就算是每月百万级别下载量的npm网站，也仅仅每秒处理17个请求而已，这样的压力甚至于PHP也可以处理掉（又黑了一把php）。
 
-　　确实如TJ所说，性能只是我们项目的指标之一而非全部，一味的去追求高性能并不是很理智。
+确实如TJ所说，性能只是我们项目的指标之一而非全部，一味的去追求高性能并不是很理智。
 
-　　ifile包开源项目地址：[https://github.com/DoubleSpout/ifile](https://github.com/DoubleSpout/ifile)
+ifile包开源项目地址：[https://github.com/DoubleSpout/ifile](https://github.com/DoubleSpout/ifile)
 
-## 　总结
+## 总结
 
-　　单线程的Node.js给我们编码带来了太多的便利和乐趣，我们应该时刻保持清醒的头脑，在写Node.js代码中切不可与PHP混淆，任何一个隐藏的问题都可能击溃整个线上正在运行的Node.js程序。
+单线程的Node.js给我们编码带来了太多的便利和乐趣，我们应该时刻保持清醒的头脑，在写Node.js代码中切不可与PHP混淆，任何一个隐藏的问题都可能击溃整个线上正在运行的Node.js程序。
 
-　　单线程异步的Node.js不代表不会阻塞，在主线程做过多的任务可能会导致主线程的卡死，影响整个程序的性能，所以我们要非常小心的处理大量的循环，字符串拼接和浮点运算等cpu密集型任务，合理的利用各种技术把任务丢给子线程或子进程去完成，保持Node.js主线程的畅通。
+单线程异步的Node.js不代表不会阻塞，在主线程做过多的任务可能会导致主线程的卡死，影响整个程序的性能，所以我们要非常小心的处理大量的循环，字符串拼接和浮点运算等cpu密集型任务，合理的利用各种技术把任务丢给子线程或子进程去完成，保持Node.js主线程的畅通。
 
-　　线程/进程的使用并不是没有开销的，尽可能减少创建和销毁线程/进程的次数，可以提升我们系统整体的性能和出错的概率。
+线程/进程的使用并不是没有开销的，尽可能减少创建和销毁线程/进程的次数，可以提升我们系统整体的性能和出错的概率。
 
-　　最后请不要一味的追求高性能和高并发，因为我们可能不需要系统具有那么大的吞吐率。高效，敏捷，低成本的开发才是项目所需要的，这也是为什么Node.js能够在众多开发语言中脱颖而出的关键。
+最后请不要一味的追求高性能和高并发，因为我们可能不需要系统具有那么大的吞吐率。高效，敏捷，低成本的开发才是项目所需要的，这也是为什么Node.js能够在众多开发语言中脱颖而出的关键。
 
-## 　参考文献：
+## 参考文献：
 
 * [http://smashingnode.com](http://smashingnode.com/)
-   Smashing Node.JS By Guillermo Rauch
+   Smashing Node.JS By Guillermo Rauch
 * [http://bjouhier.wordpress.com/2012/03/11/fibers-and-threads-in-node-js-what-for](http://bjouhier.wordpress.com/2012/03/11/fibers-and-threads-in-node-js-what-for)
   Fibers and Threads in node.js – what for? By Bruno's Ramblings
 * [https://github.com/xk/node-threads-a-gogo](https://github.com/xk/node-threads-a-gogo)
-   TAGG: Threads à gogo for Node.js By Jorge Chamorro Bieling
+   TAGG: Threads à gogo for Node.js By Jorge Chamorro Bieling
 * [https://code.google.com/p/v8/](https://code.google.com/p/v8/)
-   Google v8
+   Google v8
 * [https://github.com/joyent/libuv](https://github.com/joyent/libuv)
-   libuv by joyent
+   libuv by joyent
 
 
 
