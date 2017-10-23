@@ -92,7 +92,6 @@ div[class*="layer-"] {
     background-position: 0 0;
     transition:0.1s;
 }
-
 ```
 
 注意到`top`,`left`,`right`,`bottom`的值都是-10px,目的是让层的大小比`poster`的大20px，这样在各个层进行视察效果的时候就不会看到层的边缘部分了。
@@ -121,14 +120,11 @@ div[class*="layer-"] {
 .layer-5 {
     background-image: url('http://designmodo.com/demo/apple-tv-parallax/images/5.png');
 }
-
 ```
 
 在`layer-3`部分， 层不会移动，所以尺寸就不用太大了。
 
 ![](/assets/1621354-baaed885ccda9cd7.jpg)
-
-
 
 ## JavaScript部分
 
@@ -155,5 +151,62 @@ div[class*="layer-"] {
 </div>
 ```
 
+每一个`.layers`的规则都相同，但是我们给他们应用到`translateY`和`translateX`属性上。
 
+`data-offset`属性的值越大，动画的效果越明显，可以改变这些值体验下。
+
+为了代码可读性，我们在JavaScript里给`.poster`赋值给`$poster`变量，`.shine`给`$shine`变量，`$layer`变量代表所有层，`w`,`h`代表页面的宽度和高度。
+
+```
+var $poster = $('.poster'),
+$shine = $('.shine'),
+$layer = $('div[class*="layer-"]’);
+```
+
+现在，需要考虑下当光标移动的时候获取到光标位置的问题。我们可以用`$(window)`的`mousemove`事件来实现，这个事件会返回一个JavaScript对象，含有我们需要的位置信息和其他一些我们暂时还用不到的变量。
+
+```
+$(window).on('mousemove', function(e) {
+    var w=e.currentTarget.innerWidth,h=e.currentTarget.innerHeight;
+    var offsetX = 0.5 - e.pageX / w, /* where e.pageX is our cursor X coordinate */
+    offsetY = 0.5 - e.pageY / h,
+    offsetPoster = $poster.data('offset'), /* custom value for animation depth */
+    transformPoster = 'translateY(' + -offsetX * offsetPoster + 'px) rotateX(' + (-offsetY * offsetPoster) + 'deg) rotateY(' + (offsetX * (offsetPoster * 2)) + 'deg)';
+
+    /* apply transform to $poster */
+    $poster.css('transform', transformPoster);
+
+    /* parallax foreach layer */
+    /* loop thought each layer */
+    /* get custom parallax value */
+    /* apply transform */
+    $layer.each(function() {
+        var $this = $(this);
+        var offsetLayer = $this.data('offset') || 0; /* get custom parallax value, if element docent have data-offset, then its 0 */
+        var transformLayer = 'translateX(' + offsetX * offsetLayer + 'px) translateY(' + offsetY * offsetLayer + 'px)';
+
+        $this.css('transform', transformLayer);
+    });
+});
+
+```
+
+下一步，就是用上面解释的公式来计算`offsetY`和`offsetX`的值，然后就是把视差效果应用到`.posert`和每一个海报层。
+
+非常酷啊，现在我们就有了一个有视差效果的小部件了。
+
+**但是还没完,海报上的光泽部分还没设置**
+
+现在回到CSS部分，给`.shine`div 绝对定位，添加一个渐变颜色效果，设置`z-index`属性值为100，让它在所有层的上面。
+
+```
+.shine {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,.5) 0%,rgba(255,255,255,0) 60%);
+    z-index: 100;
+}
+```
+
+已经有了一个漂亮的闪光层在海报上，但是为了达到更逼真的效果，光照应该随着光标的移动而变化。
 
