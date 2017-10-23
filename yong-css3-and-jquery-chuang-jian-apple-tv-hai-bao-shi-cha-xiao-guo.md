@@ -188,12 +188,13 @@ $(window).on('mousemove', function(e) {
         $this.css('transform', transformLayer);
     });
 });
-
 ```
 
 下一步，就是用上面解释的公式来计算`offsetY`和`offsetX`的值，然后就是把视差效果应用到`.posert`和每一个海报层。
 
 非常酷啊，现在我们就有了一个有视差效果的小部件了。
+
+![](/assets/1621354-873438cc226156de %281%29.jpg)
 
 **但是还没完,海报上的光泽部分还没设置**
 
@@ -209,4 +210,54 @@ $(window).on('mousemove', function(e) {
 ```
 
 已经有了一个漂亮的闪光层在海报上，但是为了达到更逼真的效果，光照应该随着光标的移动而变化。
+
+我们怎么做呢？可能你还记得无聊的初三数学课，当你想着你在学一些你从来都不会用到的公式的时候，我们现在就用到了。
+
+所以，倾斜的角度应该等于光标与海报中心形成三角形的角度的相反值。（还记得吧，海报的中心就是整个页面的中心啊，也就是页面宽度和高度的二分之一）
+
+![](/assets/1621354-a74feacd1a07e222.jpg)
+
+首先，找到光标与页面中心形成的三角形的直角边，光标与中心连线后作出一个直角三角形。
+
+然后用`Math.atan2()`函数得到中心点的角度值。注意这个函数的返回值使用弧度值来表示的，所以我们得在CSS中转换成角的度数，用以下公式：
+
+**弧度值\*180/pi = 角度值**
+
+```
+var $poster = $('.poster');
+    var $shine = $('.shine');
+    var $layer = $('div[class *= "layer-"]');
+
+    $poster.data("offset",15);
+
+    $(window).on('mousemove', function(e) {
+        var w=e.currentTarget.innerWidth,h=e.currentTarget.innerHeight;
+        var offsetX = 0.5 - e.pageX / w, /* where e.pageX is our cursor X coordinate */
+        offsetY = 0.5 - e.pageY / h,
+        offsetPoster = $poster.data('offset'), /* custom value for animation depth */
+        transformPoster = 'translateY(' + -offsetX * offsetPoster + 'px) rotateX(' + (-offsetY * offsetPoster) + 'deg) rotateY(' + (offsetX * (offsetPoster * 2)) + 'deg)';
+
+        dy = e.pageY - h / 2,
+        dx = e.pageX - w / 2,
+        theta = Math.atan2(dy,dx), /* get angle in radians */
+        angle = theta * 180 / Math.PI; /* convert rad in degrees */
+
+        /* apply transform to $poster */
+        $poster.css('transform', transformPoster);
+
+        /* parallax foreach layer */
+        /* loop thought each layer */
+        /* get custom parallax value */
+        /* apply transform */
+        $layer.each(function() {
+            var $this = $(this);
+            var offsetLayer = $this.data('offset') || 0; /* get custom parallax value, if element docent have data-offset, then its 0 */
+            var transformLayer = 'translateX(' + offsetX * offsetLayer + 'px) translateY(' + offsetY * offsetLayer + 'px)';
+
+            $this.css('transform', transformLayer);
+        });
+    });
+```
+
+
 
