@@ -259,5 +259,28 @@ var $poster = $('.poster');
     });
 ```
 
+你会发现角度值的范围是从-180到180度，以下代码修复这个问题让角度值从0-360度：
+
+```
+if (angle < 0) {
+    angle = angle + 360;
+}
+```
+
+现在角度有了，就可以随着光标的移动来动态改变渐变颜色的角度值：
+
+```
+$shine.css('background', 'linear-gradient(' + (angle - 90) + 'deg, rgba(255,255,255,' + e.pageY / h + ') 0%,rgba(255,255,255,0) 80%)');
+```
+
+**注意**：减去90度的原因是`linear-gradient`属性的需要，如果你使用`-webkit-linear-gradient`,`-moz-linear-gradient`属性就没有必要。
+
+所有都OK了，可以点击来查看示例：
+
+[我是DEMO](http://designmodo.com/demo/apple-tv-parallax/)
+
+译自[http://designmodo.com/apple-tv-effect/](http://designmodo.com/apple-tv-effect/)
+
+  
 
 
