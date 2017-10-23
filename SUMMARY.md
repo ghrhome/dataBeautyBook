@@ -54,4 +54,5 @@
 * ["过期不候"--具备生命周期的数据的技术实现方案](guo-qi-bu-501922-ju-bei-sheng-ming-zhou-qi-de-shu-ju-de-ji-zhu-shi-xian-fang-an.md)
 * [字符型图片验证码识别完整过程及Python实现](zi-fu-xing-tu-pian-yan-zheng-ma-shi-bie-wan-zheng-guo-cheng-ji-python-shi-xian.md)
 * [Node.js的线程和进程](nodejsde-xian-cheng-he-jin-cheng.md)
+* [用CSS3 & jQuery创建apple TV海报视差效果](yong-css3-and-jquery-chuang-jian-apple-tv-hai-bao-shi-cha-xiao-guo.md)
 
