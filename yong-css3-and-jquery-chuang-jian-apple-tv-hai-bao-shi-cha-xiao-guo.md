@@ -66,39 +66,94 @@ body {
 
 ![](/assets/1621354-20ac0fc235101fd7.jpg)
 
-
-
 阴影效果
 
+我们可以用以下的CSS选择器来选择所有的层：
+
+```
+div[class *= 'layer-']
+```
+
+`.poster` 已经设计好了，来看看效果。
+
+所以，CSS选择了所有class类名里含有“layer-”的 `div`。
+
+现在，设置所有的层的`position`值是`absolute`,`background-repeat`值为`no-repeat`,`background-position`为`top left`
+
+, 层背景的大小为100%宽度和自动高度。
+
+```
+div[class*="layer-"] {
+    position: absolute;
+    top: -10px; left: -10px;
+    right: -10px; bottom: -10px;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    transition:0.1s;
+}
+
+```
+
+注意到`top`,`left`,`right`,`bottom`的值都是-10px,目的是让层的大小比`poster`的大20px，这样在各个层进行视察效果的时候就不会看到层的边缘部分了。
+
+以下是给每个层添加背景：
+
+```
+.layer-1 {
+    background-image: url('http://designmodo.com/demo/apple-tv-parallax/images/1.png');
+}
+
+.layer-2 {
+    background-image: url('http://designmodo.com/demo/apple-tv-parallax/images/2.png');
+}
+
+.layer-3 {
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background-image: url('http://designmodo.com/demo/apple-tv-parallax/images/3.png');
+}
+
+.layer-4 {
+    background-image: url('http://designmodo.com/demo/apple-tv-parallax/images/4.png');
+}
+
+.layer-5 {
+    background-image: url('http://designmodo.com/demo/apple-tv-parallax/images/5.png');
+}
+
+```
+
+在`layer-3`部分， 层不会移动，所以尺寸就不用太大了。
+
+![](/assets/1621354-baaed885ccda9cd7.jpg)
 
 
 
+## JavaScript部分
 
+在开始之前，请确保已经引入了jQuery库，否则会报错的。
 
+视差效果的逻辑是这样的，每当鼠标移动的时候，根据光标的位置，`.poster`的`transforms：translateY`,`rotate`,`rotateY`
 
+属性将会改变。光标距离页面左上角越远，动画的效果越明显。
 
+公式就类似于这样的：offsetX=0.5-光标距离页面顶端的位置/宽度。
 
+为了每个元素的值都不一样，将给每一个光标公式返回的值乘以一个自定义的值，返回HTML的代码给每个会有动画的层元素添加
 
+`data-offset=数字`的属性。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
+<div data-offset="15" class="poster">
+    <div class="shine"></div>
+    <div data-offset="-2" class="layer-1"></div>
+    <div class="layer-2"></div>
+    <div data-offset="1" class="layer-3"></div>
+    <div data-offset="3" class="layer-4"></div>
+    <div data-offset="10" class="layer-5"></div>
+</div>
+```
 
 
 
