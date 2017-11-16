@@ -1,15 +1,12 @@
 # nginx+uwsgi+django的Https通信
 
-**写在前面：**  
+**写在前面：**
 
+```
+由于苹果商店（App Store），从2017年开始，要求APP的HTTP通信，必须转为HTTPS，所以，我们需要把原来的架构（nginx+uwsgi+django），变为走https的。
+```
 
-    由于苹果商店（App Store），从2017年开始，要求APP的HTTP通信，必须转为HTTPS，所以，我们需要把原来的架构（nginx+uwsgi+django），变为走https的。
-
-  
-
-
-**方法：**  
-
+**方法：**
 
 **■ 方法一（通过Nginx 实现**）：
 
@@ -17,10 +14,10 @@
 
 [**《腾讯云服务器申请SSL证书, 配置Nginx, 实现HTTPS 》**](http://blog.csdn.net/chenggong2dm/article/details/61925938)
 
-**  
+**    
 **
 
-**下面是如何自己创建私有SSL证书（不太推荐，仅用于测试）  
+**下面是如何自己创建私有SSL证书（不太推荐，仅用于测试）    
 **
 
 1，创建一个目录，保存证书和私钥。（也可以放到其他目录下）
@@ -45,7 +42,7 @@ cp server.key server.key.org
 
 openssl rsa -in server.key.org -out server.key
 
-5，标记证书使用上述私钥和CSR 
+5，标记证书使用上述私钥和CSR
 
 openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 
@@ -57,7 +54,7 @@ server {
         server_name  xbreak;
 
         charset utf-8;
-        
+
         ssl on;
         ssl_certificate /home/key_dir/server.crt;
         ssl_certificate_key /home/key_dir/server.key;
@@ -67,7 +64,7 @@ server {
             include uwsgi_params;
             uwsgi_pass 127.0.0.1:19808;
         }
-        
+
         # error_page  404              /404.html;
 
         # redirect server error pages to the static page /50x.html
@@ -80,12 +77,35 @@ server {
 
 重复一遍，需要更改的就是：
 
-        listen       443;  
-        ssl on;  
-        ssl\_certificate /home/key\_dir/server.crt;  
-        ssl\_certificate\_key /home/key\_dir/server.key;
+```
+    listen       443;  
+    ssl on;  
+    ssl\_certificate /home/key\_dir/server.crt;  
+    ssl\_certificate\_key /home/key\_dir/server.key;
+```
 
-7，重启 Nginx  （由于uwsgi 没有任何更改，不需要重启！）
+7，重启 Nginx  （由于uwsgi 没有任何更改，不需要重启！）
 
 8，我们来使用https进行访问，发现是可以的！
+
+
+
+**  
+■ 方法二（可以去掉Nginx，直接用uwsgi解决**）：
+
+具体怎么做，uwsgi官网已经给出了。就是uwsgi 的https  
+
+
+  
+
+
+  
+
+
+■ 本文参考：
+
+nginx使用ssl模块配置HTTPS支持  
+
+
+http://www.cnblogs.com/yanghuahui/archive/2012/06/25/2561568.htm
 
