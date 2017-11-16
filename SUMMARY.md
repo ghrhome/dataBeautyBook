@@ -55,4 +55,5 @@
 * [字符型图片验证码识别完整过程及Python实现](zi-fu-xing-tu-pian-yan-zheng-ma-shi-bie-wan-zheng-guo-cheng-ji-python-shi-xian.md)
 * [Node.js的线程和进程](nodejsde-xian-cheng-he-jin-cheng.md)
 * [用CSS3 & jQuery创建apple TV海报视差效果](yong-css3-and-jquery-chuang-jian-apple-tv-hai-bao-shi-cha-xiao-guo.md)
+* [webpack 如何分割代码到指定文件夹？](webpack-ru-he-fen-ge-dai-ma-dao-zhi-ding-wen-jian-jia-ff1f.md)
 
