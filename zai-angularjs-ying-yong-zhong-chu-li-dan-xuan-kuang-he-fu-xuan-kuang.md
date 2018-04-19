@@ -128,6 +128,10 @@ var formApp = angular.module('formApp', [])
 </div>
 ```
 
+> 注意ng-true/false-value值绑定 的" '' "
+
+
+
 另外，现在我们还在formData对象里增加了一个awesome变量。如果此时设置这个值为true，那么返回的值应该是ofCourse，如果设置为false，那么返回的值为iWish。
 
 ### 复选框 {#content_h3_6_5}
