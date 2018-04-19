@@ -122,7 +122,7 @@ var formApp = angular.module('formApp', [])
 <label>Personal Question</label>
 <div class="checkbox">
     <label>
-        <input type="checkbox" name="awesome" ng-model="formData.awesome" ng-true-value="ofCourse" ng-false-value="iWish">
+        <input type="checkbox" name="awesome" ng-model="formData.awesome" ng-true-value=" 'ofCourse' " ng-false-value="'iWish'">
         Are you awesome?
     </label>
 </div>
